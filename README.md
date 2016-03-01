@@ -1,2 +1,4 @@
 # WSROV
-Woodstock School Underwater ROV Project
+---
+Woodstock School **Underwater ROV Project**
+
