@@ -1,0 +1,17 @@
+Thruster layout:
+
+    Front
++------------+
+|1          2|
+|            |
+|     5      |
+|            |
+|            |
+|     6      |
+|            |
+|4          3|
++------------+
+     Back
+
+Center Thrusters: thrusters located at the center of the ROV (thrusters 5 and 6)
+Corner Thrusters: thrusters located on of the corners of ROV (thrusters 1, 2, 3 and 4)
