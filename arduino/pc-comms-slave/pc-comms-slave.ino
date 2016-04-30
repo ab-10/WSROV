@@ -14,7 +14,7 @@ void loop() {
 }
 
 void receiveEvent(int howMany) {
-  if(Wire.available == 4){
+  if(Wire.available() == 4){
     read[0] = Wire.read();
     read[1] = Wire.read();
     read[2] = Wire.read();
