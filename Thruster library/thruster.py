@@ -155,12 +155,12 @@ def main():
             # Uppon joystick movement updates values for all joysticks
             if event.type == pygame.JOYAXISMOTION:
                 lsx_val = round(xbox.get_axis(lsx)*100, 0)
-                lsy_val = round(xbox.get_axis(lsy)*100, 0)*-1
+                lsy_val = -round(xbox.get_axis(lsy)*100, 0)
                 # trig_val = round(xbox.get_axis(trig)*100, 0) uncomment if using Windows
                 ltrig_val = round((xbox.get_axis(ltrig) + 1) / 0.02, 0) # comment out if using Windows
                 rtrig_val = round((xbox.get_axis(rtrig) + 1) / 0.02, 0) # comment out if using Windows
                 rsx_val = round(xbox.get_axis(rsx)*100, 0)
-                rsy_val = round(xbox.get_axis(rsy)*100, 0)*-1
+                rsy_val = -round(xbox.get_axis(rsy)*100, 0)
         # Detects and stores direction of left joystick
         # Stores force values of each thruster (in percent of their max F)
         ang = angle(lsx_val, lsy_val)
@@ -188,6 +188,12 @@ def main():
             tForce[2] = rsy_val
             tForce[3] = rsy_val
             tForce[4] = 0
+        if ltrig_val != 0:
+            tForce[5] = -ltrig_val
+            tForce[6] = -ltrig_val
+        elif rtrig_val != 0:
+            tForce[5] = rtrig_val
+            tForce[6] = rtrig_val
 
 # Class that defines properties for each individual thruster
 class Thruster:
