@@ -54,7 +54,6 @@ def test():
         return
 
 def angle(x, y):
-
     if x == 0:
         if y < 0:
             return 270
@@ -62,10 +61,8 @@ def angle(x, y):
             return 90
         else:
             return 0
-
     tan  = y / x
     arctan = atan(tan) / 3.14 * 180
-
     if x > 0 and y >= 0:
         return arctan
     elif x > 0 and y < 0:
@@ -78,14 +75,15 @@ def angle(x, y):
 # Code that continiously is being looped through
 def main():
 
-    thrusters = [None] * 7
-    tForce = [None] * 7
+    thrusters = [None]*7
+    tForce = [None]*7
 
     n = 1
     while(n <= 6):
         thrusters[n] = Thruster(n)
         n += 1
-
+    direction = 'none'
+    pDirection = 'none'
     # Xbox controller button IDs
     a_but = 0
     b_but = 1
@@ -95,13 +93,17 @@ def main():
     r_but = 5
     back_but = 6
     start_but = 7
-    ls_but = 8 # change to 9 if using linux
-    rs_but = 9 # change to 10 if using linux
+    # ls_but = 8 uncomment if on Windows
+    # rs_but = 9 uncomment if on Windows
+    ls_but = 9 # comment out if on Windows
+    rs_but = 10 # comment out if on Windows
 
     # Xbox controller axis IDs
     lsx = 0
     lsy = 1
-    trig = 2
+    # trig = 2 uncomment if on Windows
+    ltrig = 2 # comment out if on Windows
+    rtrig = 5 # comment out if on Windows
     rsx = 3
     rsy = 4
 
@@ -118,12 +120,22 @@ def main():
     rs_butVal = 0
 
     # Xbox controller axis values
-    lsxVal = 0
-    lsyVal = 0
-    print(lsyVal)
-    trigVal = 0
-    rsxVal = 0
-    rsyVal = 0
+    lsx_val = 0
+    lsy_val = 0
+    # trig_val = 0 uncomment if on Windows
+    ltrig_val = 50 # comment out if on Windows
+    rtrig_val = 50 # comment out if on Windows
+    rsx_val = 0
+    rsy_val = 0
+
+    # Following for loop is neccessary only if using Linux
+    # Comment out if using Windows
+    print("Press and release both triggers!")
+    while ltrig_val != 0 or rtrig_val != 0:
+        for event in pygame.event.get():
+            if event.type == pygame.JOYAXISMOTION:
+                ltrig_val = round((xbox.get_axis(ltrig) + 1) / 0.02, 0)
+                rtrig_val = round((xbox.get_axis(rtrig) + 1) / 0.02, 0)
 
     while True:
         for event in pygame.event.get():
@@ -142,22 +154,40 @@ def main():
                 rs_butVal = xbox.get_button(rs_but)
             # Uppon joystick movement updates values for all joysticks
             if event.type == pygame.JOYAXISMOTION:
-                lsxVal = round(xbox.get_axis(lsx)*100, 0)
-                lsyVal = round(xbox.get_axis(lsy)*100, 0)*-1
-                trigVal = round(xbox.get_axis(trig)*100, 0)
-                rsxVal = round(xbox.get_axis(rsx)*100, 0)
-                rsyVal = round(xbox.get_axis(rsy)*100, 0)
-
-        # Detects direction of left joystick
-        ang = angle(lsxVal, lsyVal)
+                lsx_val = round(xbox.get_axis(lsx)*100, 0)
+                lsy_val = round(xbox.get_axis(lsy)*100, 0)*-1
+                # trig_val = round(xbox.get_axis(trig)*100, 0) uncomment if using Windows
+                ltrig_val = round((xbox.get_axis(ltrig) + 1) / 0.02, 0) # comment out if using Windows
+                rtrig_val = round((xbox.get_axis(rtrig) + 1) / 0.02, 0) # comment out if using Windows
+                rsx_val = round(xbox.get_axis(rsx)*100, 0)
+                rsy_val = round(xbox.get_axis(rsy)*100, 0)*-1
+        # Detects and stores direction of left joystick
+        # Stores force values of each thruster (in percent of their max F)
+        ang = angle(lsx_val, lsy_val)
         if ang >= 45 and ang < 135:
-            print('forward')
+            direction = 'F'
+            tForce[1] = rsy_val
+            tForce[2] = rsy_val
+            tForce[3] = 0
+            tForce[4] = 0
         elif ang >= 135 and ang < 225:
-            print('left')
+            direction = 'L'
+            tForce[1] = rsy_val
+            tForce[2] = 0
+            tForce[3] = 0
+            tForce[4] = rsy_val
         elif ang >= 225 and ang < 315:
-            print('back')
+            direction = 'B'
+            tForce[1] = 0
+            tForce[2] = 0
+            tForce[3] = rsy_val
+            tForce[4] = rsy_val
         elif ang >= 315 or ang < 45:
-            print('right')
+            direction = 'R'
+            tForce[1] = 0
+            tForce[2] = rsy_val
+            tForce[3] = rsy_val
+            tForce[4] = 0
 
 # Class that defines properties for each individual thruster
 class Thruster:
