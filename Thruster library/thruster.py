@@ -10,6 +10,11 @@ port = ""     # Used in init() don't change
 ser = ""      # Will be defined as a serial port
 timeout = 10  # Timeout for communication with Master in seconds
 
+# Maps input  to given parameters
+# as the map() function in Arduino Programming Language
+def arduino_map(x, in_min, in_max, out_min, out_max):
+	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+
 def init(port_val = "COM4", # Change to "/dev/ttyACM0" if on Linux, Name of port used to communicate with Arduino
          ):
     # global port
@@ -40,7 +45,7 @@ def test():
                     print("Connection to controller verified")
                     n -= 1
 
-    # Verifying conection to the master Arduino
+    # Verifying conection to the Master Arduino
     ser.write(b'A')
     ser.write(b'A')
     ser.write(b'm')
@@ -48,9 +53,9 @@ def test():
     ser.write(b'E')
     read = ser.read(2)
     if(read == 'mm'):
-        print("Conection to master verified")
+        print("Conection to Master verified")
     else:
-        print("Failed to verify connection to master")
+        print("Failed to verify connection to Master")
         return
 
 def angle(x, y):
@@ -76,7 +81,8 @@ def angle(x, y):
 def main():
 
     thrusters = [None]*7
-    tForce = [None]*7
+    tForce = [None]*7 # contains the force values for each thruster in percent
+                      # can be both positive and negative
 
     n = 1
     while(n <= 6):
@@ -164,6 +170,7 @@ def main():
         # Detects and stores direction of left joystick
         # Stores force values of each thruster (in percent of their max F)
         ang = angle(lsx_val, lsy_val)
+        pDirection = direction
         if ang >= 45 and ang < 135:
             direction = 'F'
             tForce[1] = rsy_val
@@ -195,6 +202,17 @@ def main():
             tForce[5] = rtrig_val
             tForce[6] = rtrig_val
 
+        # If horizontal direction has changed
+        # writes zeros to all corner thrusters first
+        if direction != pDirection:
+            n = 1
+            while n <= 4:
+                thrusters[n].write(0)
+                n += 1
+        # Writes force values of each thruster to Master
+        for n, thruster in enumerate(thrusters):
+            thruster.write(tForce(n))
+
 # Class that defines properties for each individual thruster
 class Thruster:
 # Function automatically executed upon creation of a thruster object
@@ -207,7 +225,8 @@ class Thruster:
         self.ub = ub
 
 # Function to write values to an ESC through Arduinos
-    def write(self, signal):
+    def write(self, force):
+        signal = arduino_map(force, -100, 100, self.lb, self.ub)
         ser.write(self.num)
         ser.write(self.num)
         ser.write(signal)
