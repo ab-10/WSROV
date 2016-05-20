@@ -203,15 +203,17 @@ def main():
             tForce[6] = rtrig_val
 
         # If horizontal direction has changed
-        # writes zeros to all corner thrusters first
+        # sends zeros to all corner thrusters first
         if direction != pDirection:
             n = 1
             while n <= 4:
-                thrusters[n].write(0)
+                thrusters[n].send(0)
                 n += 1
-        # Writes force values of each thruster to Master
+        # sends force values of each thruster to Master
         for n, thruster in enumerate(thrusters):
-            thruster.write(tForce(n))
+            thruster.send(tForce(n))
+		ser.write('E')
+		ser.write('E')
 
 # Class that defines properties for each individual thruster
 class Thruster:
@@ -224,8 +226,8 @@ class Thruster:
         self.lb = lb
         self.ub = ub
 
-# Function to write values to an ESC through Arduinos
-    def write(self, force):
+# Function to send values to an ESC through Arduinos
+    def send(self, force):
         signal = arduino_map(force, -100, 100, self.lb, self.ub)
         ser.write(self.num)
         ser.write(self.num)
