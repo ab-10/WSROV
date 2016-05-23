@@ -52,11 +52,23 @@ def test():
     ser.write(b'm')
     ser.write(b'E')
     read = ser.read(2)
-    if(read == 'mm'):
+    if read == 'mm':
         print("Conection to Master verified")
     else:
         print("Failed to verify connection to Master")
         return
+
+	# Verifying connection to Slave Arduino
+	ser.Write(b'A')
+	ser.Write(b'A')
+	ser.Write(b's')
+	ser.Write(b's')
+	ser.Write(b'E')
+	read = ser.read(2)
+	if read == 'ss':
+		print('Connection to Slave verified')
+	else
+		print('Failed to verify connection to Master')
 
 def angle(x, y):
     if x == 0:
@@ -205,14 +217,20 @@ def main():
         # If horizontal direction has changed
         # sends zeros to all corner thrusters first
         if direction != pDirection:
+			ser.write('T')
+			ser.write('T')
             n = 1
             while n <= 4:
                 thrusters[n].send(0)
                 n += 1
+			while n <= 6:
+				thrusters[n].send(tForce[n])
+				n += 1
+			ser.write('E')
+
         # sends force values of each thruster to Master
         for n, thruster in enumerate(thrusters):
-            thruster.send(tForce(n))
-		ser.write('E')
+            thruster.send(tForce[n])
 		ser.write('E')
 
 # Class that defines properties for each individual thruster
@@ -229,10 +247,7 @@ class Thruster:
 # Function to send values to an ESC through Arduinos
     def send(self, force):
         signal = arduino_map(force, -100, 100, self.lb, self.ub)
-        ser.write(self.num)
-        ser.write(self.num)
-        ser.write(signal)
-        ser.write(signal)
+        ser.write(force)
 
 init()
 main()
