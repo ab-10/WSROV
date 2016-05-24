@@ -41,7 +41,7 @@ void receiveEvent(int howMany) {
             }
         }
     }
-    // If
+    // If connection is being tested store both test bytes
     else if (Wire.available() == 2) {
         read[0] = Wire.read();
         read[1] = Wire.read();
