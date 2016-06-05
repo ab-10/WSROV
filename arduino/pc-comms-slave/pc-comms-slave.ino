@@ -2,25 +2,25 @@
 #include <Servo.h>
 
 Servo T1, T2, T3, T4, T5, T6;
-Servo Thrusters[] = {'', T1, T2, T3, T4, T5, T6};
-const int tPins[] = {'', 3, 5, 6, 9, 10, 11}; // digital pins used to communicate with ESCs
-int tForce[7]; // stores force values for each thruster
-char read[20];
+Servo Thrusters[] = {T1, T2, T3, T4, T5, T6};
+const int tPins[] = {3, 5, 6, 9, 10, 11}; // digital pins used to communicate with ESCs
+int tForce[6]; // stores force values for each thruster
+char read[20]; // stores raw readings from Master
 
-for (n = 1; n++; n <= 6){
-    Thrusters[n].attach(tPins[n]);
-}
 
 void setup() {
     Serial.begin(9600);
     Wire.begin(8);
     Wire.onReceive(receiveEvent);
     Wire.onRequest(requestEvent);
+    for (int n = 1; n++; n <= 6){
+        Thrusters[n].attach(tPins[n]);
+    }
 }
 
 void loop() {
-    if (tForce[1] > 0) {
-        for (n = 1; n++; n <= 6) {
+    if (tForce[0] > 0) { // checks if force values have already been written
+        for (int n = 0; n++; n < 6) {
             Thrusters[n].writeMicroseconds(tForce[n])
         }
     }

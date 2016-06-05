@@ -12,7 +12,7 @@ void setup() {
 }
 
 void loop() {
-    Serial.readBytesUntil(E, read, 20);
+    Serial.readBytesUntil('E', read, 20);
     // If thruster values are sent send them to Slave
     if (read[0] == read[1] && read[0] == 'T') {
         Wire.beginTransmission(8);
