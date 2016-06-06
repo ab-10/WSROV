@@ -15,20 +15,20 @@ timeout = 10  # Timeout for communication with Master in seconds
 def arduino_map(x, in_min, in_max, out_min, out_max):
 	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
-def init(port_val = "COM4", # Change to "/dev/ttyACM0" if on Linux, Name of port used to communicate with Arduino
+def init(port_val = "/dev/ttyACM0", # Change to "COM4" if on Windows, Name of port used to communicate with Arduino
          ):
-    # global port
-    # port = port_val
-    # global ser
-    # ser = serial.Serial(port, timeout = timeout)
+    global port
+    port = port_val
+    global ser
+    ser = serial.Serial(port, timeout = timeout)
     pygame.joystick.init()
     global xbox
     xbox = pygame.joystick.Joystick(0)
     xbox.init()
     screen = pygame.display.set_mode((320, 160))
     pygame.display.set_caption("Thruster")
-    # while(not ser.isOpen()): # Waits until port opens
-        # pass
+    while(not ser.isOpen()): # Waits until port opens
+        pass
 
 # Tests whether is it able to communicate to Xbox controller and both Arduinos
 def test():
@@ -59,17 +59,18 @@ def test():
         return
 
 	# Verifying connection to Slave Arduino
-	ser.Write(b'A')
-	ser.Write(b'A')
-	ser.Write(b's')
-	ser.Write(b's')
-	ser.Write(b'E')
-	read = ser.read(2)
-	if read == 'ss':
-		print('Connection to Slave verified')
-	else
-		print('Failed to verify connection to Master')
+    ser.Write(b'A')
+    ser.Write(b'A')
+    ser.Write(b's')
+    ser.Write(b's')
+    ser.Write(b'E')
+    read = ser.read(2)
+    if read == 'ss':
+        print('Connection to Slave verified')
+    else:
+        print('Failed to verify connection to Master')
 
+# Outputs angle that point makes with origin
 def angle(x, y):
     if x == 0:
         if y < 0:
@@ -175,7 +176,7 @@ def main():
                 lsx_val = round(xbox.get_axis(lsx)*100, 0)
                 lsy_val = -round(xbox.get_axis(lsy)*100, 0)
                 # trig_val = round(xbox.get_axis(trig)*100, 0) uncomment if using Windows
-                ltrig_val = round((xbox.get_axis(ltrig) + 1) / 0.02, 0) # comment out if using Windows
+                ltrig_val = -round((xbox.get_axis(ltrig) + 1) / 0.02, 0) # comment out if using Windows
                 rtrig_val = round((xbox.get_axis(rtrig) + 1) / 0.02, 0) # comment out if using Windows
                 rsx_val = round(xbox.get_axis(rsx)*100, 0)
                 rsy_val = -round(xbox.get_axis(rsy)*100, 0)
@@ -217,21 +218,22 @@ def main():
         # If horizontal direction has changed
         # sends zeros to all corner thrusters first
         if direction != pDirection:
-			ser.write('T')
-			ser.write('T')
+            ser.write('T')
+            ser.write('T')
             n = 1
             while n <= 4:
                 thrusters[n].send(0)
                 n += 1
-			while n <= 6:
-				thrusters[n].send(tForce[n])
-				n += 1
-			ser.write('E')
+            while n <= 6:
+                thrusters[n].send(tForce[n])
+                n += 1
+                ser.write('E')
 
         # sends force values of each thruster to Master
         for n, thruster in enumerate(thrusters):
             thruster.send(tForce[n])
-		ser.write('E')
+
+        ser.write('E')
 
 # Class that defines properties for each individual thruster
 class Thruster:
@@ -246,7 +248,8 @@ class Thruster:
 
 # Function to send values to an ESC through Arduinos
     def send(self, force):
-        signal = arduino_map(force, -100, 100, self.lb, self.ub)
+        force = arduino_map(force, -100, 100, self.lb, self.ub)
+        force = str(force)
         ser.write(force)
 
 init()

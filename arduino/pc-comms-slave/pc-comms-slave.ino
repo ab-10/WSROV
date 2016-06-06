@@ -21,7 +21,7 @@ void setup() {
 void loop() {
     if (tForce[0] > 0) { // checks if force values have already been written
         for (int n = 0; n++; n < 6) {
-            Thrusters[n].writeMicroseconds(tForce[n])
+            Thrusters[n].writeMicroseconds(tForce[n]);
         }
     }
 }
