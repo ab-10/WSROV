@@ -10,25 +10,28 @@ port = ""     # Used in init() don't change
 ser = ""      # Will be defined as a serial port
 timeout = 10  # Timeout for communication with Master in seconds
 
+
 # Maps input  to given parameters
 # as the map() function in Arduino Programming Language
 def arduino_map(x, in_min, in_max, out_min, out_max):
-	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
-def init(port_val = "/dev/ttyACM0", # Change to "COM4" if on Windows, Name of port used to communicate with Arduino
+
+def init(port_val = "/dev/ttyACM0",  # Change to "COM4" if on Windows, Name of port used to communicate with Arduino
          ):
     global port
     port = port_val
     global ser
-    ser = serial.Serial(port, timeout = timeout)
+    ser = serial.Serial(port, timeout=timeout)
     pygame.joystick.init()
     global xbox
     xbox = pygame.joystick.Joystick(0)
     xbox.init()
     screen = pygame.display.set_mode((320, 160))
     pygame.display.set_caption("Thruster")
-    while(not ser.isOpen()): # Waits until port opens
+    while not ser.isOpen():  # Waits until port opens
         pass
+
 
 # Tests whether is it able to communicate to Xbox controller and both Arduinos
 def test():
@@ -58,7 +61,7 @@ def test():
         print("Failed to verify connection to Master")
         return
 
-	# Verifying connection to Slave Arduino
+    # Verifying connection to Slave Arduino
     ser.Write(b'A')
     ser.Write(b'A')
     ser.Write(b's')
@@ -70,6 +73,7 @@ def test():
     else:
         print('Failed to verify connection to Master')
 
+
 # Outputs angle that point makes with origin
 def angle(x, y):
     if x == 0:
@@ -79,7 +83,7 @@ def angle(x, y):
             return 90
         else:
             return 0
-    tan  = y / x
+    tan = y / x
     arctan = atan(tan) / 3.14 * 180
     if x > 0 and y >= 0:
         return arctan
@@ -90,12 +94,12 @@ def angle(x, y):
     elif x < 0 and y > 0:
         arctan + 180
 
+
 # Code that continiously is being looped through
 def main():
 
     thrusters = [None]*7
-    tForce = [None]*7 # contains the force values for each thruster in percent
-                      # can be both positive and negative
+    tForce = [None]*7  # force values in percent can be positive or negative based on direction
 
     n = 1
     while(n <= 6):
@@ -114,15 +118,15 @@ def main():
     start_but = 7
     # ls_but = 8 uncomment if on Windows
     # rs_but = 9 uncomment if on Windows
-    ls_but = 9 # comment out if on Windows
-    rs_but = 10 # comment out if on Windows
+    ls_but = 9   # comment out if on Windows
+    rs_but = 10  # comment out if on Windows
 
     # Xbox controller axis IDs
     lsx = 0
     lsy = 1
     # trig = 2 uncomment if on Windows
-    ltrig = 2 # comment out if on Windows
-    rtrig = 5 # comment out if on Windows
+    ltrig = 2  # comment out if on Windows
+    rtrig = 5  # comment out if on Windows
     rsx = 3
     rsy = 4
 
@@ -142,8 +146,8 @@ def main():
     lsx_val = 0
     lsy_val = 0
     # trig_val = 0 uncomment if on Windows
-    ltrig_val = 50 # comment out if on Windows
-    rtrig_val = 50 # comment out if on Windows
+    ltrig_val = 50  # comment out if on Windows
+    rtrig_val = 50  # comment out if on Windows
     rsx_val = 0
     rsy_val = 0
 
@@ -176,8 +180,8 @@ def main():
                 lsx_val = round(xbox.get_axis(lsx)*100, 0)
                 lsy_val = -round(xbox.get_axis(lsy)*100, 0)
                 # trig_val = round(xbox.get_axis(trig)*100, 0) uncomment if using Windows
-                ltrig_val = -round((xbox.get_axis(ltrig) + 1) / 0.02, 0) # comment out if using Windows
-                rtrig_val = round((xbox.get_axis(rtrig) + 1) / 0.02, 0) # comment out if using Windows
+                ltrig_val = -round((xbox.get_axis(ltrig) + 1) / 0.02, 0)  # comment out if using Windows
+                rtrig_val = round((xbox.get_axis(rtrig) + 1) / 0.02, 0)   # comment out if using Windows
                 rsx_val = round(xbox.get_axis(rsx)*100, 0)
                 rsy_val = -round(xbox.get_axis(rsy)*100, 0)
         # Detects and stores direction of left joystick
@@ -235,13 +239,14 @@ def main():
 
         ser.write('E')
 
+
 # Class that defines properties for each individual thruster
 class Thruster:
-# Function automatically executed upon creation of a thruster object
+    # Function automatically executed upon creation of a thruster object
     def __init__(self,
-                 num,# ID of a thruster
-                 lb = 1140, # Lower bound of PWM that will be sent to a thruster
-                 ub = 1855): # Upper bound of PWM that will be sent to a thruster
+                 num,         # ID of a thruster
+                 lb=1140,   # Lower bound of PWM that will be sent to a thruster
+                 ub=1855):  # Upper bound of PWM that will be sent to a thruster
         self.num = num
         self.lb = lb
         self.ub = ub
