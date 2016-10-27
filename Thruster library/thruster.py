@@ -66,7 +66,6 @@ rsx_val = 0
 rsy_val = 0
 
 
-
 # Maps input  to given parameters
 # as the map() function in Arduino Programming Language
 def arduino_map(x, in_min, in_max, out_min, out_max):
@@ -164,6 +163,7 @@ def main():
                 rtrig_val = round((xbox.get_axis(rtrig) + 1) / 0.02, 0)
 
     while True:
+
         for event in pygame.event.get():
             # Uppon a button press updates values (states) of all buttons
             # Comment out buttons not used
@@ -178,6 +178,7 @@ def main():
                 start_butVal = xbox.get_button(start_but)
                 ls_butVal = xbox.get_button(ls_but)
                 rs_butVal = xbox.get_button(rs_but)
+
             # Uppon joystick movement updates values for all joysticks
             if event.type == pygame.JOYAXISMOTION:
                 lsx_val = round(xbox.get_axis(lsx)*100, 0)
@@ -187,6 +188,7 @@ def main():
                 rtrig_val = round((xbox.get_axis(rtrig) + 1) / 0.02, 0)   # comment out if using Windows
                 rsx_val = round(xbox.get_axis(rsx)*100, 0)
                 rsy_val = -round(xbox.get_axis(rsy)*100, 0)
+
         # Detects and stores direction of left joystick
         # Stores force values of each thruster (in percent of their max F)
         ang = angle(lsx_val, lsy_val)
