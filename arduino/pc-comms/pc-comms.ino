@@ -28,7 +28,6 @@ void loop() {
                 case 'm':
                     Serial.print(read[2]);
                     Serial.print(read[2]);
-                    break;
                 case 's':
                     Wire.beginTransmission(8);
                     Wire.write(read[2]);
@@ -39,7 +38,6 @@ void loop() {
                         Serial.print(c);
                     }
                     Wire.endTransmission();
-                    break;
                 }
             }
         }
