@@ -34,7 +34,7 @@ void receiveEvent(int howMany) {
             read[n] = Wire.read();
         }
         if (read[0] == read[1] && read[0] == 'T'){
-            for (int n = 1; n++; n <= 6) {
+            for (int n = 0; n++; n < 6) {
                 String value;
                 value += read[3 * n - 1] + read[3 * n] + read[3 * n + 1];
                 tForce[n] = value.toInt();
