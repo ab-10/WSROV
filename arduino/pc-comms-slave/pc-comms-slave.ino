@@ -13,7 +13,7 @@ void setup() {
     Wire.begin(8);
     Wire.onReceive(receiveEvent);
     Wire.onRequest(requestEvent);
-    for (int n = 1; n++; n <= 6){
+    for (int n = 0; n++; n < 6){
         Thrusters[n].attach(tPins[n]);
     }
 }
