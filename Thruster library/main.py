@@ -2,7 +2,7 @@
 # Created by WSROV team
 import pygame
 import serial
-from math import atan
+from helper import *
 from pygame.locals import *
 from time import sleep
 
@@ -58,12 +58,6 @@ ltrig_val = 50  # comment out if on Windows
 rtrig_val = 50  # comment out if on Windows
 rsx_val = 0
 rsy_val = 0
-
-
-# Maps input  to given parameters
-# as the map() function in Arduino Programming Language
-def arduino_map(x, in_min, in_max, out_min, out_max):
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
 
 def init(port_val = "/dev/ttyACM0",  # Change to "COM4" if on Windows, Name of port used to communicate with Arduino
@@ -123,27 +117,6 @@ def test():
         print('Failed to verify connection to Master')
 
 
-# Outputs angle that point makes with origin
-def angle(x, y):
-    if x == 0:
-        if y < 0:
-            return 270
-        if y > 0:
-            return 90
-        else:
-            return 0
-    tan = y / x
-    arctan = atan(tan) / 3.14 * 180
-    if x > 0 and y >= 0:
-        return arctan
-    elif x > 0 and y < 0:
-        return arctan + 360
-    elif x < 0 and y <= 0:
-        return arctan + 180
-    elif x < 0 and y > 0:
-        arctan + 180
-
-
 # Code that continiously is being looped through
 def main():
 
@@ -192,17 +165,6 @@ def main():
 
         # If horizontal direction has changed
         # sends zeros to all corner thrusters first
-        if direction != pDirection:
-            ser.write('T')
-            ser.write('T')
-            n = 1
-            while n <= 4:
-                thrusters[n].send(0)
-                n += 1
-            while n <= 6:
-                thrusters[n].send(tForce[n])
-                n += 1
-                ser.write('E')
 
         # sends force values of each thruster to Master
         cThruster.send()
@@ -216,9 +178,7 @@ class cThruster:
     direction = 'none'
 
     def updateForce(joystickAngle, rsy_val, ltrig_val, rtrig_val):
-        """ Update locally stored thruster force values and direction.
-
-
+        """ Updates locally stored thruster force values and direction.
 
         Arguments:
         joystickAngle -- angle that the coordinate of steering joystick make with the x-axis
@@ -264,6 +224,18 @@ class cThruster:
             force = arduino_map(force[i], -100, 100, 1140, 1855)
             force = str(force)
             ser.write(force)
+        ser.write('E')
+
+    def sendNull(self):
+        ser.write('T')
+        ser.write('T')
+        n = 1
+        while n <= 4:
+            thrusters[n].send(0)
+            n += 1
+        while n <= 6:
+            thrusters[n].send(tForce[n])
+            n += 1
         ser.write('E')
 
 
