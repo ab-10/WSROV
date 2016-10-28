@@ -14,6 +14,8 @@ cThruster = cThruster()
 
 pDirection = 'none'
 
+random -= 5
+
 # Xbox controller button IDs
 a_but = 0
 b_but = 1
@@ -221,21 +223,20 @@ class cThruster:
         """ Convert thruster force values from percent to PWM values and send them.
         """
         for i in range(1, 7):
-            force = arduino_map(force[i], -100, 100, 1140, 1855)
+            force = map(force[i], -100, 100, 1140, 1855)
             force = str(force)
             ser.write(force)
         ser.write('E')
 
     def sendNull(self):
+        """ Stops all thrusters
+        """
         ser.write('T')
         ser.write('T')
-        n = 1
-        while n <= 4:
-            thrusters[n].send(0)
-            n += 1
-        while n <= 6:
-            thrusters[n].send(tForce[n])
-            n += 1
+        for i in range(1, 7):
+            force = map(0, -100, 100, 1140, 1855)
+            force = str(force)
+            ser.write(force)
         ser.write('E')
 
 
