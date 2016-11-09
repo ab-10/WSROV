@@ -166,10 +166,10 @@ def main():
 
         # If horizontal direction has changed
         # sends zeros to all corner thrusters first
-        control.sendNull()
+        control.sendNull(ser)
 
         # sends force values of each thruster to Master
-        control.send()
+        control.send(ser)
 
 
 

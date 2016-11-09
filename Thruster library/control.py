@@ -47,7 +47,7 @@ class control:
             force[5] = rtrig_val
             force[6] = rtrig_val
 
-    def send(self):
+    def send(self, ser):
         """ Convert thruster force values from percent to PWM values and send them.
         """
         for i in range(1, 7):
@@ -56,7 +56,7 @@ class control:
             ser.write(force)
         ser.write('E')
 
-    def sendNull(self):
+    def sendNull(self, ser):
         """ Stops all thrusters
         """
         ser.write('T')
