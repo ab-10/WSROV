@@ -2,10 +2,12 @@
 # Created by WSROV team
 import pygame
 import serial
-from control import *
-from helper import *
 from pygame.locals import *
 from time import sleep
+
+from control import *
+from helper import *
+import sensors
 
 port = ""     # Used in init() don't change
 ser = ""      # Will be defined as a serial port
@@ -170,6 +172,12 @@ def main():
 
         # sends force values of each thruster to Master
         control.send(ser)
+
+        if a_butVal == 1:
+            print("Humidity:", sensors.get_hum(ser))
+ 
+        if b_butVal == 1:
+            print("Temperature:", sensors.get_temp(ser))
 
 
 
