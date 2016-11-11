@@ -4,7 +4,7 @@ class control:
     """ Stores thruster force values and handles sending them.
     """
 
-    force = [none] * 7
+    force = [None] * 7
     direction = 'none'
 
     def updateForce(joystickAngle, rsy_val, ltrig_val, rtrig_val):
