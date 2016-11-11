@@ -2,7 +2,7 @@
     Created by WSROV team
 */
 
-#include <WSWire.h>
+#include <Wire.h>
 
 char read[20];
 
@@ -21,9 +21,31 @@ void loop() {
         }
         Wire.endTransmission();
     }
+    else if (read[0] == read[1] && read[0] == 'S'){
+        Wire.beginTransmission(8);
+        switch (read[2]) {
+            case 'h':
+                Wire.write ('h');
+                delay(100);
+                while (Wire.available()){
+                    byte hum = Wire.read();
+                    Serial.print(hum); 
+                } 
+                  Wire.endTransmission();
+                  
+            case 't':
+                Wire.write ('t');
+                delay(100);
+                while (Wire.available()){
+                    byte temp = Wire.read();
+                    Serial.print(temp);
+                }
+                    Wire.endTransmission();
+              }
+    }                                   
     // If test bytes('A') are sent verify connection to Master and Slave
     else if (read[0] == read[1] && read[0] == 'A') {
-        if (read[2] == read[3]) {
+        if (read[0] == read[1]) {
             switch (read[2]) {
                 case 'm':
                     Serial.print(read[2]);
