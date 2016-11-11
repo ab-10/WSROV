@@ -3,8 +3,6 @@
 import pygame
 import serial
 from pygame.locals import *
-from time import sleep
-
 
 import control
 import sensors
@@ -64,7 +62,7 @@ rsx_val = 0
 rsy_val = 0
 
 
-def init(port_val = "/dev/ttyACM0",  # Change to "COM4" if on Windows, Name of port used to communicate with Arduino
+def init(port_val = "/dev/ttyACM0" # Change to "COM4" if on Windows, Name of port used to communicate with Arduino
          ):
     global port
     port = port_val
@@ -179,7 +177,6 @@ def main():
  
         if b_butVal == 1:
             print("Temperature:", sensors.get_temp(ser))
-
 
 
 init()
