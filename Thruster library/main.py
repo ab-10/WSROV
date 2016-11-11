@@ -8,7 +8,7 @@ from time import sleep
 
 import control
 import sensors
-from helper import *
+import helper
 
 port = ""     # Used in init() don't change
 ser = ""      # Will be defined as a serial port
@@ -162,7 +162,7 @@ def main():
 
         # Detects and stores direction of left joystick
         # Stores force values of each thruster (in percent of their max F)
-        ang = angle(lsx_val, lsy_val)
+        ang = helper.angle(lsx_val, lsy_val)
         pDirection = control.direction
 
         control.updateForce(ang, rsy_val, ltrig_val, rtrig_val)
