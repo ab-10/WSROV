@@ -5,15 +5,16 @@ import serial
 from pygame.locals import *
 from time import sleep
 
-from control import *
-from helper import *
+
+import control
 import sensors
+from helper import *
 
 port = ""     # Used in init() don't change
 ser = ""      # Will be defined as a serial port
 timeout = 10  # Timeout for communication with Master in seconds
 
-control = control()
+control = control.control()
 
 pDirection = 'none'
 
