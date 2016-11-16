@@ -1,10 +1,11 @@
 # Class for calculating and sending signals to thrusters
+import helper
 
 class control:
     """ Stores thruster force values and handles sending them.
     """
 
-    force = [none] * 7
+    force = [None] * 7
     direction = 'none'
 
     def updateForce(joystickAngle, rsy_val, ltrig_val, rtrig_val):
@@ -51,7 +52,7 @@ class control:
         """ Convert thruster force values from percent to PWM values and send them.
         """
         for i in range(1, 7):
-            force = map(force[i], -100, 100, 1140, 1855)
+            force = helper.map(force[i], -100, 100, 1140, 1855)
             force = str(force)
             ser.write(force)
         ser.write('E')
@@ -62,7 +63,7 @@ class control:
         ser.write('T')
         ser.write('T')
         for i in range(1, 7):
-            force = map(0, -100, 100, 1140, 1855)
+            force = helper.map(0, -100, 100, 1140, 1855)
             force = str(force)
             ser.write(force)
         ser.write('E')

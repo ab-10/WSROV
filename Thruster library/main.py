@@ -3,17 +3,16 @@
 import pygame
 import serial
 from pygame.locals import *
-from time import sleep
 
-from control import *
-from helper import *
+import control
 import sensors
+import helper
 
 port = ""     # Used in init() don't change
 ser = ""      # Will be defined as a serial port
 timeout = 10  # Timeout for communication with Master in seconds
 
-control = control()
+control = control.control()
 
 pDirection = 'none'
 
@@ -63,7 +62,7 @@ rsx_val = 0
 rsy_val = 0
 
 
-def init(port_val = "/dev/ttyACM0",  # Change to "COM4" if on Windows, Name of port used to communicate with Arduino
+def init(port_val = "/dev/ttyACM0" # Change to "COM4" if on Windows, Name of port used to communicate with Arduino
          ):
     global port
     port = port_val
@@ -161,7 +160,7 @@ def main():
 
         # Detects and stores direction of left joystick
         # Stores force values of each thruster (in percent of their max F)
-        ang = angle(lsx_val, lsy_val)
+        ang = helper.angle(lsx_val, lsy_val)
         pDirection = control.direction
 
         control.updateForce(ang, rsy_val, ltrig_val, rtrig_val)
@@ -178,7 +177,6 @@ def main():
  
         if b_butVal == 1:
             print("Temperature:", sensors.get_temp(ser))
-
 
 
 init()
