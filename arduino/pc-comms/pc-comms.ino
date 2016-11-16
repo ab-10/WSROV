@@ -43,20 +43,18 @@ void loop() {
     // If test bytes('A') are sent verify connection to Master and Slave
     else if (read[0] == read[1] && read[0] == 'A') {
         if (read[0] == read[1]) {
-            switch (read[2]) {
-                case 'm':
+                if (read[2] == 'm'){
                     Serial.print(read[2]);
                     Serial.print(read[2]);
-                    break;
-                case 's':
+                }
+        }else if(read[2] == 's'){
                     Wire.beginTransmission(8);
                     Wire.requestFrom(8, 2);
                     while(Wire.available()) {
                         byte c = Wire.read();
                         Serial.print(c);
-                    }
                     Wire.endTransmission();
+                    }
                 }
-            }
         }
 }
