@@ -12,13 +12,12 @@ Servo T1, T2, T3, T4, T5, T6;
 Servo Thrusters[] = {T1, T2, T3, T4, T5, T6};
 const int tPins[] = {3, 5, 6, 9, 10, 11}; // digital pins used to communicate with ESCs
 int tForce[6]; // stores force values for each thruster
-byte read; // stores raw readings from Master
+int read[7]; // stores raw readings from Master
 
 float hum = 0;
 float temp = 0;
 byte first = 0;
 byte second = 0;
-int i = 0;
 
 
 void setup() {
@@ -40,19 +39,22 @@ void loop() {
 }
 
 void receiveEvent(int howMany){
-  while(Wire.available()){
-    read = Wire.read();
-    
-    if (read == 1){
+  int i = 0;
+  while(Wire.available() > 0){
+    read[i] = Wire.read();
+    i++;
+  }
+
+  
+  else if (read[0] == 'S'){
+    if (read[1] == 'h'){
       hum = dht.readHumidity();
       first = hum;
       Wire.write(first);
       second = hum - first;
       second *= 100;
       Wire.write (second);
-    }
-
-    if (read == 2){
+    } else if (read[1] == 2){
       temp = dht.readTemperature();
       first = temp;
       Wire.write(first);
