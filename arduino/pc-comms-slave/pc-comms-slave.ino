@@ -1,5 +1,6 @@
+#include <Adafruit_Sensor.h>
+
 #include <DHT.h>
-#include <DHT_U.h>
 
 #include <Wire.h>
 #include <Servo.h>
@@ -37,7 +38,7 @@ void loop() {
     }
 }
 
-void receiveEvent(){
+void receiveEvent(int howMany){
   int i = 0;
   while( Wire.available() > 0){
     read[i] = Wire.read();
