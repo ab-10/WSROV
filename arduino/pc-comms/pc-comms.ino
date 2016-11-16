@@ -13,7 +13,6 @@ void setup() {
 
 void loop() {
     Serial.readBytesUntil('E', read, 20);
-    // If thruster values are sent send them to Slave
     if (read[0] == read[1] && read[0] == 'T') {
         Wire.beginTransmission(8);
         for (int i = 0; i++; i < 20) {
@@ -23,19 +22,17 @@ void loop() {
     }
     else if (read[0] == read[1] && read[0] == 'S'){
         Wire.beginTransmission(8);
-        switch (read[2]) {
-            case 'h':
-                Wire.write ('h');
-                delay(100);
+       if (read[2] == 'h'){
+                Wire.write (1);
                 while (Wire.available()){
                     byte hum = Wire.read();
-                    Serial.print(hum); 
+                    Serial.print(hum);
                 } 
-                  Wire.endTransmission();
                   
-            case 't':
-                Wire.write ('t');
-                delay(100);
+                  Wire.endTransmission();
+       }   
+        if (read[2] == 't'){
+                Wire.write (2);
                 while (Wire.available()){
                     byte temp = Wire.read();
                     Serial.print(temp);
@@ -50,13 +47,12 @@ void loop() {
                 case 'm':
                     Serial.print(read[2]);
                     Serial.print(read[2]);
+                    break;
                 case 's':
                     Wire.beginTransmission(8);
-                    Wire.write(read[2]);
-                    Wire.write(read[2]);
-                    Wire.requestFrom(8, (char)2);
+                    Wire.requestFrom(8, 2);
                     while(Wire.available()) {
-                        char c = Wire.read();
+                        byte c = Wire.read();
                         Serial.print(c);
                     }
                     Wire.endTransmission();
