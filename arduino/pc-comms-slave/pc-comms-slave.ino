@@ -31,35 +31,46 @@ void setup() {
 }
 
 void loop() {
-    if (tForce[0] > 0) { // checks if force values have already been written
-        for (int n = 0; n++; n < 6) {
-            Thrusters[n].writeMicroseconds(tForce[n]);
-        }
-    }
+
 }
 
 void receiveEvent(int howMany){
-  int i = 0;
-  while( Wire.available() > 0){
-    read[i] = Wire.read();
-    i++;
-  }
-  
-  switch (read[0]){
-    case 'h':
-      hum = dht.readHumidity();
-      first = hum;
-      Wire.write(first);
-      second = hum - first;
-      second *= 100;
-      Wire.write (second);
+    int i = 0;
+    while ( Wire.available() > 0){
+        read[i] = Wire.read();
+        i++;
+    }
+    if (read[0] == 'T'){
+        tForce[0] = read[1] * 100;
+        tForce[0] += read[2];
+        tForce[1] = read[3] * 100;
+        tForce[1] += read[4]; 
 
-    case 't':
-      temp = dht.readTemperature();
-      first = temp;
-      Wire.write(first);
-      second = temp - first;
-      second *= 100;
-      Wire.write (second);
-  }
+        Thrusters[0].writeMicroseconds(tForce[0]);
+        Thrusters[1].writeMicroseconds(tForce[1]); 
+    }
+
+}  
+
+void requestEvent(int howMuch){
+    if(read[0] == 'S'){
+        if (read[1] == 'h'){
+            hum = dht.readHumidity();
+            first = hum;
+            Wire.write(first);
+            second = hum - first;
+            second *= 100;
+            Wire.write (second);
+        }else if (read[1] == 't'){
+            temp = dht.readTemperature();
+            first = temp;
+            Wire.write(first);
+            second = temp - first;
+            second *= 100;
+            Wire.write (second);
+        } 
+    }else if(read[0] == 'A'){
+        wire.write('s');
+        wire.write('s');
+    }
 }

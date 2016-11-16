@@ -163,7 +163,7 @@ def main():
         ang = helper.angle(lsx_val, lsy_val)
         pDirection = control.direction
 
-        control.updateForce(ang, rsy_val, ltrig_val, rtrig_val)
+        control.updateForce(rsy_val, lsy_val)
 
         # If horizontal direction has changed
         # sends zeros to all corner thrusters first

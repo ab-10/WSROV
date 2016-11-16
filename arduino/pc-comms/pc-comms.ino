@@ -5,6 +5,7 @@
 #include <Wire.h>
 
 char read[20];
+boolean sent;
 
 void setup() {
     Serial.begin(9600);
@@ -12,55 +13,46 @@ void setup() {
 }
 
 void loop() {
+    if (Serial.available() > 0){
+        notSent = true;
+    }
     Serial.readBytesUntil('E', read, 20);
     // If thruster values are sent send them to Slave
-    if (read[0] == read[1] && read[0] == 'T') {
+    if (read[0] == 'T') {
         Wire.beginTransmission(8);
-        for (int i = 0; i++; i < 20) {
+        for (int i = 0; i++; i < 6) {
             Wire.write(read[i]);
         }
         Wire.endTransmission();
     }
-    else if (read[0] == read[1] && read[0] == 'S'){
+    else if ((read[0] == 'S') && notSent){
         Wire.beginTransmission(8);
-        switch (read[2]) {
-            case 'h':
-                Wire.write ('h');
-                delay(100);
-                while (Wire.available()){
-                    byte hum = Wire.read();
-                    Serial.print(hum); 
-                } 
-                  Wire.endTransmission();
-                  
-            case 't':
-                Wire.write ('t');
-                delay(100);
-                while (Wire.available()){
-                    byte temp = Wire.read();
-                    Serial.print(temp);
-                }
-                    Wire.endTransmission();
-              }
-    }                                   
-    // If test bytes('A') are sent verify connection to Master and Slave
-    else if (read[0] == read[1] && read[0] == 'A') {
-        if (read[0] == read[1]) {
-            switch (read[2]) {
-                case 'm':
-                    Serial.print(read[2]);
-                    Serial.print(read[2]);
-                case 's':
-                    Wire.beginTransmission(8);
-                    Wire.write(read[2]);
-                    Wire.write(read[2]);
-                    Wire.requestFrom(8, (char)2);
-                    while(Wire.available()) {
-                        char c = Wire.read();
-                        Serial.print(c);
-                    }
-                    Wire.endTransmission();
-                }
-            }
+        if (read[1] == 'h') {
+            Wire.write ('h');
+            Wire.requestFrom(8, 2);
+            int hum = Wire.read();
+            hum += Wire.read() / 100;
+            Serial.print(hum); 
+            Wire.endTransmission();
+        }else if (read[1] == 't'){
+            Wire.write ('t');
+            Wire.requestFrom(8, 2)
+            int temp = Wire.read();
+            temp += Wire.read() / 100;
+            Serial.print(temp);
+            Wire.endTransmission();
         }
+        notSent = false;
+    } else if (read[0] == 'A'){
+        if (read[1] == 'm'){
+            Serial.print(read[2]);
+        }else if (read[1] == 's'){
+            Wire.beginTransmission(8);
+            Wire.write(read[1]);
+            Wire.requestFrom(8, 2);
+            byte c = Wire.read();
+            Serial.print(c);
+            Wire.endTransmission();
+        }
+    }
 }
