@@ -70,7 +70,7 @@ void requestEvent(int howMuch){
             Wire.write (second);
         } 
     }else if(read[0] == 'A'){
-        wire.write('s');
-        wire.write('s');
+        Wire.write('s');
+        Wire.write('s');
     }
 }
