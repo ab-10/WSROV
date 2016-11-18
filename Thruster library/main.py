@@ -7,60 +7,14 @@ from pygame.locals import *
 import thrusterControl
 import sensors
 import helper
+import controller
 
 port = ""     # Used in init() don't change
 ser = ""      # Will be defined as a serial port
 timeout = 10  # Timeout for communication with Master in seconds
 
+controller = controller.controller()
 thruster = thrusterControl.thruster()
-
-pDirection = 'none'
-
-# Xbox controller button IDs
-a_but = 0
-b_but = 1
-x_but = 2
-y_but = 3
-l_but = 4
-r_but = 5
-back_but = 6
-start_but = 7
-
-# ls_but = 8 uncomment if on Windows
-# rs_but = 9 uncomment if on Windows
-ls_but = 9   # comment out if on Windows
-rs_but = 10  # comment out if on Windows
-
-# Xbox controller axis IDs
-lsx = 0
-lsy = 1
-# trig = 2 uncomment if on Windows
-ltrig = 2  # comment out if on Windows
-rtrig = 5  # comment out if on Windows
-rsx = 3
-rsy = 4
-
-# Xbox controller button values (states)
-a_butVal = 0
-b_butVal = 0
-x_butVal = 0
-y_butVal = 0
-l_butVal = 0
-r_butVal = 0
-back_butVal = 0
-start_butVal = 0
-ls_butVal = 0
-rs_butVal = 0
-
-# Xbox controller axis values
-lsx_val = 0
-lsy_val = 0
-# trig_val = 0 uncomment if on Windows
-ltrig_val = 50  # comment out if on Windows
-rtrig_val = 50  # comment out if on Windows
-rsx_val = 0
-rsy_val = 0
-
 
 def init(port_val = "/dev/ttyACM0" # Change to "COM4" if on Windows, Name of port used to communicate with Arduino
          ):
@@ -125,13 +79,13 @@ def main():
     # Following for loop is neccessary only if using Linux
     # Comment out if using Windows
     print("Press and release both triggers!")
-    ltrig_val = 1
-    rtrig_val = 1
-    while ltrig_val != 0 or rtrig_val != 0:
+    controller.ltrig_val = 1
+    controller.rtrig_val = 1
+    while controller.ltrig_val != 0 or controller.rtrig_val != 0:
         for event in pygame.event.get():
             if event.type == pygame.JOYAXISMOTION:
-                ltrig_val = round((xbox.get_axis(ltrig) + 1) / 0.02, 0)
-                rtrig_val = round((xbox.get_axis(rtrig) + 1) / 0.02, 0)
+                controller.ltrig_val = round((xbox.get_axis(controller.ltrig) + 1) / 0.02, 0)
+                controller.rtrig_val = round((xbox.get_axis(controller.rtrig) + 1) / 0.02, 0)
 
     while True:
 
@@ -139,33 +93,33 @@ def main():
             # Uppon a button press updates values (states) of all buttons
             # Comment out buttons not used
             if event.type == pygame.JOYBUTTONUP:
-                a_butVal = xbox.get_button(a_but)
-                b_butVal = xbox.get_button(b_but)
-                x_butVal = xbox.get_button(x_but)
-                y_butVal = xbox.get_button(y_but)
-                l_butVal = xbox.get_button(l_but)
-                r_butVal = xbox.get_button(r_but)
-                back_butVal = xbox.get_button(back_but)
-                start_butVal = xbox.get_button(start_but)
-                ls_butVal = xbox.get_button(ls_but)
-                rs_butVal = xbox.get_button(rs_but)
+                controller.a_butVal = xbox.get_button(controller.a_but)
+                controller.b_butVal = xbox.get_button(controller.b_but)
+                controller.x_butVal = xbox.get_button(controller.x_but)
+                controller.y_butVal = xbox.get_button(controller.y_but)
+                controller.l_butVal = xbox.get_button(controller.l_but)
+                controller.r_butVal = xbox.get_button(controller.r_but)
+                controller.back_butVal = xbox.get_button(controller.back_but)
+                controller.start_butVal = xbox.get_button(controller.start_but)
+                controller.ls_butVal = xbox.get_button(controller.ls_but)
+                controller.rs_butVal = xbox.get_button(controller.rs_but)
 
             # Uppon joystick movement updates values for all joysticks
             if event.type == pygame.JOYAXISMOTION:
-                lsx_val = round(xbox.get_axis(lsx)*100, 0)
-                lsy_val = -round(xbox.get_axis(lsy)*100, 0)
-                # trig_val = round(xbox.get_axis(trig)*100, 0) uncomment if using Windows
-                ltrig_val = -round((xbox.get_axis(ltrig) + 1) / 0.02, 0)  # comment out if using Windows
-                rtrig_val = round((xbox.get_axis(rtrig) + 1) / 0.02, 0)   # comment out if using Windows
-                rsx_val = round(xbox.get_axis(rsx)*100, 0)
-                rsy_val = -round(xbox.get_axis(rsy)*100, 0)
+                controller.lsx_val = round(xbox.get_axis(lsx)*100, 0)
+                controller.lsy_val = -round(xbox.get_axis(lsy)*100, 0)
+                # controller.trig_val = round(xbox.get_axis(trig)*100, 0) uncomment if using Windows
+                controller.ltrig_val = -round((xbox.get_axis(ltrig) + 1) / 0.02, 0)  # comment out if using Windows
+                controller.rtrig_val = round((xbox.get_axis(rtrig) + 1) / 0.02, 0)   # comment out if using Windows
+                controller.rsx_val = round(xbox.get_axis(rsx)*100, 0)
+                controller.rsy_val = -round(xbox.get_axis(rsy)*100, 0)
 
         # Detects and stores direction of left joystick
         # Stores force values of each thruster (in percent of their max F)
-        ang = helper.angle(lsx_val, lsy_val)
+        ang = helper.angle(controller.lsx_val, controller.lsy_val)
         pDirection = thruster.direction
-
-        thruster.updateForce(rsy_val, lsy_val)
+ 
+        thruster.updateForce(controller.rsy_val, controller.lsy_val)
 
         # If horizontal direction has changed
         # sends zeros to all corner thrusters first
@@ -174,10 +128,10 @@ def main():
         # sends force values of each thruster to Master
         thruster.send(ser)
 
-        if a_butVal == 1:
+        if controller.a_butVal == 1:
             print("Humidity:", sensors.get_hum(ser))
  
-        if b_butVal == 1:
+        if controller.b_butVal == 1:
             print("Temperature:", sensors.get_temp(ser))
 
 
