@@ -125,6 +125,8 @@ def main():
     # Following for loop is neccessary only if using Linux
     # Comment out if using Windows
     print("Press and release both triggers!")
+    ltrig_val = 1
+    rtrig_val = 1
     while ltrig_val != 0 or rtrig_val != 0:
         for event in pygame.event.get():
             if event.type == pygame.JOYAXISMOTION:
