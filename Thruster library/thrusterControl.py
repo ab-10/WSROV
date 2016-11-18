@@ -1,7 +1,7 @@
 # Class for calculating and sending signals to thrusters
 import helper
 
-class control:
+class thruster:
     """ Stores thruster force values and handles sending them.
     """
 

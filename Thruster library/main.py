@@ -4,7 +4,7 @@ import pygame
 import serial
 from pygame.locals import *
 
-import control
+import thrusterControl
 import sensors
 import helper
 
@@ -12,7 +12,7 @@ port = ""     # Used in init() don't change
 ser = ""      # Will be defined as a serial port
 timeout = 10  # Timeout for communication with Master in seconds
 
-control = control.control()
+thruster = thrusterControl.thruster()
 
 pDirection = 'none'
 
@@ -163,16 +163,16 @@ def main():
         # Detects and stores direction of left joystick
         # Stores force values of each thruster (in percent of their max F)
         ang = helper.angle(lsx_val, lsy_val)
-        pDirection = control.direction
+        pDirection = thruster.direction
 
-        control.updateForce(rsy_val, lsy_val)
+        thruster.updateForce(rsy_val, lsy_val)
 
         # If horizontal direction has changed
         # sends zeros to all corner thrusters first
-        control.sendNull(ser)
+        thruster.sendNull(ser)
 
         # sends force values of each thruster to Master
-        control.send(ser)
+        thruster.send(ser)
 
         if a_butVal == 1:
             print("Humidity:", sensors.get_hum(ser))
