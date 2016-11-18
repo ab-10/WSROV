@@ -5,7 +5,7 @@
 #include <Wire.h>
 
 char read[20];
-boolean sent;
+boolean notSent;
 
 void setup() {
     Serial.begin(9600);
@@ -36,7 +36,7 @@ void loop() {
             Wire.endTransmission();
         }else if (read[1] == 't'){
             Wire.write ('t');
-            Wire.requestFrom(8, 2)
+            Wire.requestFrom(8, 2);
             int temp = Wire.read();
             temp += Wire.read() / 100;
             Serial.print(temp);
