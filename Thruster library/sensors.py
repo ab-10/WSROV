@@ -8,14 +8,14 @@ def get_temp(ser):
     Temperature readings from sensor on Slave in Celsius
     """
 
-   ser.write('S')
-   ser.write('S')
-   ser.write('t')
-   ser.write('t')
-   ser.write('E')
+    ser.write('S')
+    ser.write('S')
+    ser.write('t')
+    ser.write('t')
+    ser.write('E')
 
-   temp = ser.read(2)
-   return temp
+    temp = ser.read(2)
+    return temp
 
 def get_hum(ser):
     """ Requests and returns temperature
