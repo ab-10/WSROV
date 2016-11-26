@@ -8,7 +8,7 @@ class thruster:
     force = [None] * 2
     direction = 'none'
 
-    def updateForce(rsy_val, lsx_val):
+    def updateForce(self, rsy_val, lsx_val):
         """ Updates locally stored thruster force values and direction.
 
         Arguments:
