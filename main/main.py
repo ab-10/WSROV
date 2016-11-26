@@ -38,23 +38,22 @@ def test():
     if(pygame.joystick.get_count() == 0):
         print("No controller found")
         return
-    n = 1
     print("Press the 'start' button!")
+
+    n = True
     while n:
         for event in pygame.event.get():
             if event.type == JOYBUTTONDOWN:
                 if event.button == 7:
                     print("Connection to controller verified")
-                    n -= 1
+                    n = False
 
     # Verifying conection to the Master Arduino
     ser.write(b'A')
-    ser.write(b'A')
-    ser.write(b'm')
     ser.write(b'm')
     ser.write(b'E')
-    read = ser.read(2)
-    if read == 'mm':
+    read = ser.read(1)
+    if read == 'm':
         print("Conection to Master verified")
     else:
         print("Failed to verify connection to Master")
@@ -62,12 +61,10 @@ def test():
 
     # Verifying connection to Slave Arduino
     ser.Write(b'A')
-    ser.Write(b'A')
-    ser.Write(b's')
     ser.Write(b's')
     ser.Write(b'E')
-    read = ser.read(2)
-    if read == 'ss':
+    read = ser.read(1)
+    if read == 's':
         print('Connection to Slave verified')
     else:
         print('Failed to verify connection to Master')
