@@ -71,6 +71,5 @@ void requestEvent(int howMuch){
         } 
     }else if(read[0] == 'A'){
         Wire.write('s');
-        Wire.write('s');
     }
 }

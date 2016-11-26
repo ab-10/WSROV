@@ -48,17 +48,19 @@ void loop() {
 
     } else if ((reading[0] == 'A') && notSent) {
         if (reading[1] == 'm'){
+            notSent = 0;
             Serial.print(reading[1]);
 
         }else if (reading[1] == 's'){
             Wire.beginTransmission(8);
+            Wire.write(reading[0]);
             Wire.write(reading[1]);
-            Wire.requestFrom(8, 2);
+            Wire.write(reading[2]);
+            Wire.requestFrom(8, 1);
             byte c = Wire.read();
             Serial.print(c);
             Wire.endTransmission();
         }
-		notSent = 0;
     }
 }
 
