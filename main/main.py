@@ -16,7 +16,7 @@ timeout = 10  # Timeout for communication with Master in seconds
 controller = controller.controller()
 thruster = thrusterControl.thruster()
 
-def init(port_val = "/dev/ttyACM0" # Change to "COM4" if on Windows, Name of port used to communicate with Arduino
+def init(port_val = "/dev/ttyACM1" # Change to "COM4" if on Windows, Name of port used to communicate with Arduino
          ):
     global port
     port = port_val
@@ -103,13 +103,13 @@ def main():
 
             # Uppon joystick movement updates values for all joysticks
             if event.type == pygame.JOYAXISMOTION:
-                controller.lsx_val = round(xbox.get_axis(lsx)*100, 0)
-                controller.lsy_val = -round(xbox.get_axis(lsy)*100, 0)
+                controller.lsx_val = round(xbox.get_axis(controller.lsx)*100, 0)
+                controller.lsy_val = -round(xbox.get_axis(controller.lsy)*100, 0)
                 # controller.trig_val = round(xbox.get_axis(trig)*100, 0) uncomment if using Windows
-                controller.ltrig_val = -round((xbox.get_axis(ltrig) + 1) / 0.02, 0)  # comment out if using Windows
-                controller.rtrig_val = round((xbox.get_axis(rtrig) + 1) / 0.02, 0)   # comment out if using Windows
-                controller.rsx_val = round(xbox.get_axis(rsx)*100, 0)
-                controller.rsy_val = -round(xbox.get_axis(rsy)*100, 0)
+                controller.ltrig_val = -round((xbox.get_axis(controller.ltrig) + 1) / 0.02, 0)  # comment out if using Windows
+                controller.rtrig_val = round((xbox.get_axis(controller.rtrig) + 1) / 0.02, 0)   # comment out if using Windows
+                controller.rsx_val = round(xbox.get_axis(controller.rsx)*100, 0)
+                controller.rsy_val = -round(xbox.get_axis(controller.rsy)*100, 0)
 
         # Detects and stores direction of left joystick
         # Stores force values of each thruster (in percent of their max F)
@@ -133,4 +133,5 @@ def main():
 
 
 init()
+test()
 main()

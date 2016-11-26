@@ -17,14 +17,14 @@ class thruster:
         ltrig_val -- value of left trigger (must be modified for Windows, because on win both triggers are read as single variable)
         rtrig_val -- value of right trigger (also must be modified for Windows)
         """
-        force[0] = rsy_val
-        force[1] = lsx_val
+        self.force[0] = rsy_val
+        self.force[1] = lsx_val
 
     def send(self, ser):
         """ Convert thruster force values from percent to PWM values and send them.
         """
         for i in range(0, 2):
-            force = helper.map(force[i], -100, 100, 1140, 1855)
+            force = helper.map(self.force[i], -100, 100, 1140, 1855)
             force = str(force)
             ser.write(force)
         ser.write('E')
