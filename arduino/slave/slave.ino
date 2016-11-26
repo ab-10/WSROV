@@ -9,11 +9,11 @@
 #define DHTTYPE DHT22
 DHT dht(DHTPIN, DHTTYPE);
 
-Servo T1, T2, T3, T4, T5, T6;
-Servo Thrusters[] = {T1, T2, T3, T4, T5, T6};
-const int tPins[] = {3, 5, 6, 9, 10, 11}; // digital pins used to communicate with ESCs
-int tForce[6]; // stores force values for each thruster
-byte read[2]; // stores raw readings from Master
+Servo T1, T2;
+Servo Thrusters[] = {T1, T2};
+const int tPins[] = {5, 6}; // digital pins used to communicate with ESCs
+int tForce[2]; // stores force values for each thruster
+byte read[4]; // stores raw readings from Master
 
 float hum = 0;
 float temp = 0;
@@ -25,7 +25,7 @@ void setup() {
     Serial.begin(9600);
     Wire.begin(8);
     Wire.onReceive(receiveEvent);
-    for (int n = 0; n++; n < 6){
+    for (int n = 0; n++; n < 2){
         Thrusters[n].attach(tPins[n]);
     }
 }
