@@ -11,12 +11,12 @@ import controller
 
 port = ""     # Used in init() don't change
 ser = ""      # Will be defined as a serial port
-timeout = 10  # Timeout for communication with Master in seconds
 
 controller = controller.controller()
 thruster = thrusterControl.thruster()
 
-def init(port_val = "/dev/ttyACM1" # Change to "COM4" if on Windows, Name of port used to communicate with Arduino
+def init(port_val = "/dev/ttyACM1",
+        timeout=1
          ):
     global port
     port = port_val
@@ -60,9 +60,9 @@ def test():
         return
 
     # Verifying connection to Slave Arduino
-    ser.Write(b'A')
-    ser.Write(b's')
-    ser.Write(b'E')
+    ser.write(b'A')
+    ser.write(b's')
+    ser.write(b'E')
     read = ser.read(1)
     if read == 's':
         print('Connection to Slave verified')
