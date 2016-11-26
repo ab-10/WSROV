@@ -53,6 +53,7 @@ def test():
     ser.write(b'm')
     ser.write(b'E')
     read = ser.read(1)
+    print(read)
     if read == 'm':
         print("Conection to Master verified")
     else:
@@ -67,7 +68,7 @@ def test():
     if read == 's':
         print('Connection to Slave verified')
     else:
-        print('Failed to verify connection to Master')
+        print('Failed to verify connection to Slave')
 
 
 # Code that continiously is being looped through
@@ -134,4 +135,3 @@ def main():
 
 init()
 test()
-main()
