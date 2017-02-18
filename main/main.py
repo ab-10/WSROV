@@ -27,7 +27,7 @@ def init(port_val = "/dev/ttyACM1",
     xbox.init()
     screen = pygame.display.set_mode((320, 160))
     pygame.display.set_caption("WSROV")
-    while not ser.isOpen():  # Waits until port opens
+    while not port.isOpen():  # Waits until port opens
         pass
 
 
@@ -49,7 +49,7 @@ def test():
 
     # Verifying conection to the Master Arduino
     communication.send(port, 'T', 'm')
-    read = ser.read(1)
+    read = port.read(1)
     print(read)
     if read == 'm':
         print("Conection to Master verified")
@@ -59,7 +59,7 @@ def test():
 
     # Verifying connection to Slave Arduino
     communication.send(port, 'T', 's')
-    read = ser.read(1)
+    read = port.read(1)
     if read == 's':
         print('Connection to Slave verified')
     else:
@@ -116,16 +116,16 @@ def main():
 
         # If horizontal direction has changed
         # sends zeros to all corner thrusters first
-        thruster.sendNull(ser)
+        thruster.sendNull(port)
 
         # sends force values of each thruster to Master
-        thruster.send(ser)
+        thruster.send(port)
 
         if controller.a_butVal == 1:
-            print("Humidity:", sensors.get_hum(ser))
+            print("Humidity:", sensors.get_hum(port))
  
         if controller.b_butVal == 1:
-            print("Temperature:", sensors.get_temp(ser))
+            print("Temperature:", sensors.get_temp(port))
 
 
 init()
