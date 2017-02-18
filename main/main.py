@@ -48,7 +48,7 @@ def test():
                     n = False
 
     # Verifying conection to the Master Arduino
-    communication.send(port, 'T', 'm')
+    communication.send(port, 'A', 'm')
     read = port.read(1)
     print(read)
     if read == 'm':
@@ -58,7 +58,7 @@ def test():
         return
 
     # Verifying connection to Slave Arduino
-    communication.send(port, 'T', 's')
+    communication.send(port, 'A', 's')
     print(read)
     read = port.read(1)
     if read == 's':

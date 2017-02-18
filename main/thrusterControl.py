@@ -25,9 +25,9 @@ class thruster:
     def send(self, port):
         """ Convert thruster force values from percent to PWM values and send them.
         """
-        communication.send(port, 'A', bytes(force[0] // 100), bytes(force[0] % 100), bytes(force[1] // 100), bytes(force[1] % 100))
+        communication.send(port, 'T', bytes(force[0] // 100), bytes(force[0] % 100), bytes(force[1] // 100), bytes(force[1] % 100))
 
     def sendNull(self, port):
         """ Stops all thrusters
         """
-        communication.send(port, 'A', bytes(14), bytes(97), bytes(14), bytes(97))
+        communication.send(port, 'T', bytes(14), bytes(97), bytes(14), bytes(97))
