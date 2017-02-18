@@ -1,4 +1,6 @@
-def get_temp(ser):
+import communication
+
+def get_temp(port):
     """ Requests and returns temperature
     
     Arguments:
@@ -7,17 +9,13 @@ def get_temp(ser):
     Returns:
     Temperature readings from sensor on Slave in Celsius
     """
+    
+    communication.send(port, 'S', 't')
 
-    ser.write('S')
-    ser.write('S')
-    ser.write('t')
-    ser.write('t')
-    ser.write('E')
-
-    temp = ser.read(2)
+    temp = port.read(2)
     return temp
 
-def get_hum(ser):
+def get_hum(port):
     """ Requests and returns temperature
 
     Arguments:
@@ -26,12 +24,8 @@ def get_hum(ser):
     Returns:
     Relative humidity readings from sensor on Slave in percent
     """
+    
+    communication.send(port, 'S', 'h')
 
-    ser.write('S')
-    ser.write('S')
-    ser.write('h')
-    ser.write('h')
-    ser.write('E')
-
-    hum = ser.read(2)
+    hum = port.read(2)
     return temp
