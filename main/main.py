@@ -48,9 +48,7 @@ def test():
                     n = False
 
     # Verifying conection to the Master Arduino
-    ser.write(b'A')
-    ser.write(b'm')
-    ser.write(b'E')
+    communication.send(port, 'T', 'm')
     read = ser.read(1)
     print(read)
     if read == 'm':
@@ -60,15 +58,13 @@ def test():
         return
 
     # Verifying connection to Slave Arduino
-    ser.write(b'A')
-    ser.write(b's')
-    ser.write(b'E')
+    communication.send(port, 'T', 's')
     read = ser.read(1)
     if read == 's':
         print('Connection to Slave verified')
     else:
         print('Failed to verify connection to Slave')
-
+        return
 
 # Code that continiously is being looped through
 def main():
