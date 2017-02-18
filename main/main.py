@@ -7,6 +7,7 @@ from pygame.locals import *
 import thrusterControl
 import sensors
 import helper
+import communication
 import controller
 
 port = ""     # Used in init() don't change
@@ -19,15 +20,13 @@ def init(port_val = "/dev/ttyACM1",
         timeout=1
          ):
     global port
-    port = port_val
-    global ser
-    ser = serial.Serial(port, timeout=timeout)
+    port = serial.Serial(port_val, timeout=timeout)
     pygame.joystick.init()
     global xbox
     xbox = pygame.joystick.Joystick(0)
     xbox.init()
     screen = pygame.display.set_mode((320, 160))
-    pygame.display.set_caption("Thruster")
+    pygame.display.set_caption("WSROV")
     while not ser.isOpen():  # Waits until port opens
         pass
 
