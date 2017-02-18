@@ -59,6 +59,7 @@ def test():
 
     # Verifying connection to Slave Arduino
     communication.send(port, 'T', 's')
+    print(read)
     read = port.read(1)
     if read == 's':
         print('Connection to Slave verified')
