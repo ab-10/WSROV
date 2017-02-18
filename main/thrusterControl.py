@@ -21,22 +21,12 @@ class thruster:
         self.force[0] = helper.map(rsy_val, -100, 100, 1140, 1850)
         self.force[1] = helper.map(lsx_val, -100, 100, 1140, 1850)
 
-    def send(self, ser):
+    def send(self, port):
         """ Convert thruster force values from percent to PWM values and send them.
         """
-        ser.write('T')
-        for i in range(0, 2):
-            ser.write(force[i] // 100)
-            ser.write(force[i] % 100)
-        ser.write('E')
+        communication.send(port, 'T', bytes(force[0] // 100), bytes(force[0] % 100), bytes(force[1] // 100), bytes(force[1] % 100))
 
-    def sendNull(self, ser):
+    def sendNull(self, port):
         """ Stops all thrusters
         """
-        ser.write('T')
-        for i in range(0, 2):
-            force = helper.map(0, -100, 100, 1140, 1855)
-            force = str(force)
-            ser.write(force)
-        ser.write('E')
-
+        communication.send(port, 'T', bytes(14), bytes(97), bytes(14), bytes(97))
