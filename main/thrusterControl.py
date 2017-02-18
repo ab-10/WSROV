@@ -11,6 +11,7 @@ class thruster:
 
     def updateForce(self, rsy_val, lsx_val):
         """ Updates locally stored thruster force values and direction.
+        """
 
         Arguments:
         joystickAngle -- angle that the coordinate of steering joystick make with the x-axis
