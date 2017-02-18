@@ -45,4 +45,3 @@ class controller:
     rtrig_val = 50  # comment out if on Windows
     rsx_val = 0
     rsy_val = 0
-
