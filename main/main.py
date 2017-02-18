@@ -1,5 +1,6 @@
 # Thruster - Library for controlling thrusters of WSROV's ROV
 # Created by WSROV team
+
 import pygame
 import serial
 from pygame.locals import *
@@ -10,8 +11,7 @@ import helper
 import communication
 import controller
 
-port = ""     # Used in init() don't change
-ser = ""      # Will be defined as a serial port
+port = ""     # port object used in init()
 
 controller = controller.controller()
 thruster = thrusterControl.thruster()
