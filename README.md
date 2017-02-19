@@ -7,7 +7,7 @@ Arduino:
 
 Python:
 - [PyGame](http://www.pygame.org/download.shtml) (`pip install pygame`)
-- [PySerial](http://pyserial.readthedocs.io/en/latest/pyserial.html#from-pypi) (`python -m pip install pyserial)
+- [PySerial](http://pyserial.readthedocs.io/en/latest/pyserial.html#from-pypi) (`python -m pip install pyserial`)
 
 ## About
 This repository contains code used to power the Woodstock school's underwater
