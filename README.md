@@ -6,8 +6,8 @@ Arduino:
 - [Adafruit DHT library](https://github.com/adafruit/DHT-sensor-library) (`git clone` into Arduino/libraries folder)
 
 Python:
-- PyGame (`pip install pygame`)
-- PySerial (`python -m pip install pyserial)
+- [PyGame](http://www.pygame.org/download.shtml) (`pip install pygame`)
+- [PySerial](http://pyserial.readthedocs.io/en/latest/pyserial.html#from-pypi) (`python -m pip install pyserial)
 
 ## About
 This repository contains code used to power the Woodstock school's underwater
