@@ -1,5 +1,14 @@
 # Code for WSROV
 
+## Dependencies
+Arduino:
+- Adafruit Unified Sensor Library (can be installed from Arduino IDE)
+- [Adafruit DHT library](https://github.com/adafruit/DHT-sensor-library) (`git clone` into Arduino/libraries folder)
+
+Python:
+- PyGame (`pip install pygame`)
+- PySerial (`python -m pip install pyserial)
+
 ## About
 This repository contains code used to power the Woodstock school's underwater
 robot for 2017 MATE
