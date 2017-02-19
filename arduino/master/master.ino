@@ -4,14 +4,14 @@
 
 #include <Wire.h>
 
-String reading = "";
+byte reading[6];
 boolean complete = false; //  whether the readinging is complete
 boolean notSent = false;
+int n = 0;
 
 void setup() {
     Serial.begin(9600);
     Wire.begin();
-    reading.reserve(4);
 }
 
 void loop() {
@@ -28,22 +28,16 @@ void loop() {
 
     else if ((reading[0] == 'S') && notSent) {
         Wire.beginTransmission(8);
-        if (reading[1] == 'h') {
-            Wire.write ('h');
-            Wire.requestFrom(8, 2);
-            int hum = Wire.read();
-            hum += Wire.read() / 100;
-            Serial.print(hum); 
-            Wire.endTransmission();
-
-        }else if (reading[1] == 't'){
-            Wire.write ('t');
-            Wire.requestFrom(8, 2);
-            int temp = Wire.read();
-            temp += Wire.read() / 100;
-            Serial.print(temp);
-            Wire.endTransmission();
+        for(int i = 0; i++; i < 6) {
+            Wire.write(reading[i]);
         }
+        Wire.requestFrom(8, 2);
+        byte wholePart = Wire.read();
+        byte decimalPart = Wire.read();
+        Serial.print(wholePart);
+        Serial.print(decimalPart);
+        Wire.endTransmission();
+
         notSent = 0;
 
     } else if ((reading[0] == 'A') && notSent) {
@@ -53,12 +47,12 @@ void loop() {
 
         }else if (reading[1] == 's'){
             Wire.beginTransmission(8);
-            Wire.write(reading[0]);
-            Wire.write(reading[1]);
-            Wire.write(reading[2]);
+            for(int i = 0; i++; i < 6){
+                Wire.write(reading[i]);
+            }
             Wire.requestFrom(8, 1);
-            byte c = Wire.read();
-            Serial.print(c);
+            byte response = Wire.read();
+            Serial.print(response);
             Wire.endTransmission();
         }
     }
@@ -66,16 +60,21 @@ void loop() {
 
 void serialEvent() {
 	if (complete){
-		reading = "";
 		complete = 0;
+        n = 0;
 	}
 
 	while (Serial.available() && !complete){
-		char inChar = Serial.read();
-		reading += inChar;
-		if (inChar == 'E'){
+		byte inByte = Serial.read();
+		reading[n] = inByte;
+        n ++;
+		if (inByte == 'E'){
 			complete = 1;
-		}
+            n = 0;
+            notSent = 1;
+		} else if(n > 5){
+            n = 0;
+        }
 	}
 
 	notSent = 1;

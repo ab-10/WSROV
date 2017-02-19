@@ -13,7 +13,7 @@ Servo T1, T2;
 Servo Thrusters[] = {T1, T2};
 const int tPins[] = {5, 6}; // digital pins used to communicate with ESCs
 int tForce[2]; // stores force values for each thruster
-byte read[4]; // stores raw readings from Master
+byte reading[6]; // stores raw readings from Master
 
 float hum = 0;
 float temp = 0;
@@ -37,14 +37,14 @@ void loop() {
 void receiveEvent(int howMany){
     int i = 0;
     while ( Wire.available() > 0){
-        read[i] = Wire.read();
+        reading[i] = Wire.read();
         i++;
     }
-    if (read[0] == 'T'){
-        tForce[0] = read[1] * 100;
-        tForce[0] += read[2];
-        tForce[1] = read[3] * 100;
-        tForce[1] += read[4]; 
+    if (reading[0] == 'T'){
+        tForce[0] = reading[1] * 100;
+        tForce[0] += reading[2];
+        tForce[1] = reading[3] * 100;
+        tForce[1] += reading[4]; 
 
         Thrusters[0].writeMicroseconds(tForce[0]);
         Thrusters[1].writeMicroseconds(tForce[1]); 
@@ -53,23 +53,22 @@ void receiveEvent(int howMany){
 }  
 
 void requestEvent(int howMuch){
-    if(read[0] == 'S'){
-        if (read[1] == 'h'){
+    if(reading[0] == 'S'){
+        if (reading[1] == 'h'){
             hum = dht.readHumidity();
             first = hum;
             Wire.write(first);
             second = hum - first;
             second *= 100;
             Wire.write (second);
-        }else if (read[1] == 't'){
+        }else if (reading[1] == 't'){
             temp = dht.readTemperature();
-            first = temp;
+            byte wholePart = temp;
             Wire.write(first);
-            second = temp - first;
-            second *= 100;
+            byte decimalPart = (temp - wholePart) * 100;
             Wire.write (second);
         } 
-    }else if(read[0] == 'A'){
+    }else if(reading[0] == 'A'){
         Wire.write('s');
     }
 }
