@@ -2,7 +2,7 @@
 import logging
 import itertools
 import platform
-import pySerial
+import serial
 import time
 from serial.tools import list_ports
 if platform.system() == 'Windows':
