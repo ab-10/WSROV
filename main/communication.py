@@ -10,5 +10,5 @@ def send(port, type, byte1='!', byte2='!', byte3='!', byte4='!'):
 def read(port):
     reading = ""
     while reading == "":
-        reading = sr.readline().replace(b"\r\n", b"")
+        reading = port.readline().replace(b"\r\n", b"")
     return reading
