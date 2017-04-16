@@ -47,7 +47,6 @@ void SerialParser() {
       Serial.println('m');
     } else if (readChar[1] == 's'){
       // Check connection with Slave
-      Serial.println('s');
     }
   }
 }
