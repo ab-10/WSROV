@@ -49,9 +49,9 @@ def test():
 
     # Verifying conection to the Master Arduino
     communication.send(port, 'A', 'm')
-    read = port.read(1)
+    read = communication.read(port)
     print(read)
-    if read == 'm':
+    if read == b'm':
         print("Conection to Master verified")
     else:
         print("Failed to verify connection to Master")
@@ -59,9 +59,9 @@ def test():
 
     # Verifying connection to Slave Arduino
     communication.send(port, 'A', 's')
+    read = communication.read(port)
     print(read)
-    read = port.read(1)
-    if read == 's':
+    if read == b's':
         print('Connection to Slave verified')
     else:
         print('Failed to verify connection to Slave')

@@ -3,10 +3,6 @@
 #include <Servo.h>
 #include <EEPROM.h>
 
-int T = 2;
-int S = 3;
-int A = 4;
-
 SoftwareSerial *sserial = NULL;
 Servo servos[8];
 int servo_pins[] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -35,8 +31,9 @@ void Version(){
 
 void SerialParser() {
   char readChar[10];
+  String read_;
   Serial.readBytesUntil('E',readChar,64);
-  String read_ = String(readChar);
+  read_ = String(readChar);
   char header = readChar[0];
   if (header == 'T'){
     // Change thruster values
@@ -44,9 +41,14 @@ void SerialParser() {
   } else if (header == 'S'){
     // Request sensor values from Slave and send them to Main
     Serial.println('S');
-  } else if (header == 'A') {
+  } else if (header == 'A'){
     // Respond to the ping
-    Serial.println('A');
+    if (readChar[1] == 'm'){
+      Serial.println('m');
+    } else if (readChar[1] == 's'){
+      // Check connection with Slave
+      Serial.println('s');
+    }
   }
 }
 
@@ -55,11 +57,10 @@ void setup()  {
     while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
-  pinMode(T, OUTPUT);
-  pinMode(S, OUTPUT);
-  pinMode(A, OUTPUT);
 }
 
 void loop() {
-   SerialParser();
-   }
+  if (Serial.available()){
+    SerialParser();
+  }
+}
