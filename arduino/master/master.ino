@@ -46,12 +46,21 @@ void SerialParser() {
     if (readChar[1] == 'm'){
       Serial.println('m');
     } else if (readChar[1] == 's'){
-      // Check connection with Slave
+      Wire.beginTransmission(8);
+      Wire.write(readChar);
+      Wire.endTransmission();
+      Wire.requestFrom(8, 5);
+      char readChar[5];
+      Wire.readBytes(readChar, 5);
+      if (readChar[0] == 's'){
+        Serial.println('s');
+      }
     }
   }
 }
 
 void setup()  {
+  Wire.begin();
   Serial.begin(9600);
     while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
