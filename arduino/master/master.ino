@@ -1,7 +1,4 @@
-#include <SoftwareSerial.h>
 #include <Wire.h>
-#include <Servo.h>
-#include <EEPROM.h>
 
 SoftwareSerial *sserial = NULL;
 Servo servos[8];
@@ -61,6 +58,7 @@ void SerialParser() {
 
 void setup()  {
   Wire.begin();
+  Wire.setClock(500);
   Serial.begin(9600);
     while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
