@@ -16,7 +16,7 @@ port = ""     # port object used in init()
 controller = controller.controller()
 thruster = thrusterControl.thruster()
 
-def init(port_val = "/dev/ttyACM1",
+def init(port_val = "/dev/ttyACM0",
         timeout=1
          ):
     global port
@@ -49,9 +49,9 @@ def test():
 
     # Verifying conection to the Master Arduino
     communication.send(port, 'A', 'm')
-    read = port.read(1)
+    read = communication.read(port)
     print(read)
-    if read == 'm':
+    if read == b'm':
         print("Conection to Master verified")
     else:
         print("Failed to verify connection to Master")
@@ -59,9 +59,9 @@ def test():
 
     # Verifying connection to Slave Arduino
     communication.send(port, 'A', 's')
+    read = communication.read(port)
     print(read)
-    read = port.read(1)
-    if read == 's':
+    if read == b's':
         print('Connection to Slave verified')
     else:
         print('Failed to verify connection to Slave')
@@ -112,7 +112,7 @@ def main():
         # Stores force values of each thruster (in percent of their max F)
         ang = helper.angle(controller.lsx_val, controller.lsy_val)
         pDirection = thruster.direction
- 
+
         thruster.updateForce(controller.rsy_val, controller.lsy_val)
 
         # If horizontal direction has changed
@@ -124,7 +124,7 @@ def main():
 
         if controller.a_butVal == 1:
             print("Humidity:", sensors.get_hum(port))
- 
+
         if controller.b_butVal == 1:
             print("Temperature:", sensors.get_temp(port))
 

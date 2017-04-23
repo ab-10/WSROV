@@ -1,9 +1,14 @@
-""" Handles communication with the robot
+""" sends data to Master using simple com protocol
 """
 def send(port, type, byte1='!', byte2='!', byte3='!', byte4='!'):
-    port.write(type)
-    port.write(byte1)
-    port.write(byte2)
-    port.write(byte3)
-    port.write(byte4)
-    port.write('E')
+    msg = type + byte1 + byte2 + byte3 + byte4 + 'E'
+    port.write(msg.encode('ascii'))
+    port.flush()
+
+""" reads from Master
+"""
+def read(port):
+    reading = b""
+    while reading == b"":
+        reading = port.readline().replace(b"\r\n", b"")
+    return reading
