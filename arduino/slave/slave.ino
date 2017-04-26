@@ -27,8 +27,6 @@ void setup() {
 void loop() {
 }
 
-// function that executes whenever data is received from master
-// this function is registered as an event, see setup()
 void receiveEvent(int howMany) {
   char readChar[howMany];
   Wire.readBytes(readChar, howMany);
