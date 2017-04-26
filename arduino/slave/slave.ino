@@ -1,5 +1,6 @@
 #include <Wire.h>
 #include <Servo.h>
+#include <DHT.h>
 
 #define DHTPIN 2     
 #define DHTTYPE DHT22   // DHT 22  (AM2302)
@@ -11,6 +12,8 @@ int thrusterVals[2] = {1500, 1500};
 
 byte hum;
 byte temp;
+float realtemp;
+float realhum;
 
 void setup() {
   Wire.begin(8);                // join i2c bus with address #8
@@ -37,14 +40,25 @@ void receiveEvent(int howMany) {
     value += readChar[4];
     thrusterVals[1] = value;
     
-  }else if ((readChar[0] == 'S') && (readChar[1] == 't')){
-         temp= dht.readTemperature();
+  }else if (readChar[0] == 'S') {
+        if (readChar[1] == 't'){
+         realtemp = dht.readTemperature();
+         temp = realtemp;
+         responseBuf[0] = temp;
+         realtemp = realtemp - temp;
+         temp = realtemp * 100; 
+         responseBuf[1] = temp;
     }
-    else if (readChar[1] == 'h'){
-        hum = dht.Humidity();
-  }
+        else if (readChar[1] == 'h'){
+         realhum = dht.readHumidity();
+         hum = realhum;
+         responseBuf[0] = hum;
+         realhum = realhum - hum;
+         hum = realhum * 100;
+         responseBuf[1] = hum;
+    }
+   }
 }
-
 void requestEvent(){
   Serial.println(responseBuf);
   Wire.write(responseBuf);
