@@ -3,6 +3,11 @@
 #include <EthernetUdp.h>
 #include <Servo.h>
 
+byte mac[] = {0x90, 0xA2, 0xDA, 0x0F, 0x16, 0x2F};
+IPAddress ip(192, 168, 1, 177);
+IPAddress remoteIP(192, 168, 1, 178);
+unsigned int localPort = 34;
+
 String response;
 char responseBuf[5] = {'!', '!', '!', '!', '!'};
 int thrusterVals[2] = {1500, 1500};

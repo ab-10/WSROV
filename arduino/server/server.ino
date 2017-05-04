@@ -2,6 +2,11 @@
 #include <Ethernet.h>
 #include <EthernetUdp.h>
 
+byte mac[] = {0x90, 0xA2, 0xDA, 0x0D, 0xD2, 0x92};
+IPAddress ip(192, 168, 1, 178);
+IPAddress remoteIP(192, 168, 1, 177);
+unsigned int localPort = 34;
+
 SoftwareSerial *sserial = NULL;
 Servo servos[8];
 int servo_pins[] = {0, 0, 0, 0, 0, 0, 0, 0};
