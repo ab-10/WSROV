@@ -1,4 +1,6 @@
-#include <Wire.h>
+#include <SPI.h>
+#include <Ethernet.h>
+#include <EthernetUdp.h>
 
 SoftwareSerial *sserial = NULL;
 Servo servos[8];

@@ -1,4 +1,6 @@
-#include <Wire.h>
+#include <SPI.h>
+#include <Ethernet.h>
+#include <EthernetUdp.h>
 #include <Servo.h>
 
 String response;
@@ -28,7 +30,7 @@ void receiveEvent(int howMany) {
     value = readChar[3]*100;
     value += readChar[4];
     thrusterVals[1] = value;
-    
+
   }else if ((readChar[0] == 'A') && (readChar[1] == 's')){
     responseBuf[0] = 's';
   }
