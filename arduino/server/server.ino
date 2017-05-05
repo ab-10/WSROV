@@ -13,9 +13,18 @@ int servo_pins[] = {0, 0, 0, 0, 0, 0, 0, 0};
 boolean connected = false;
 
 void setup()  {
+  Ethernet.begin(mac, ip);
+  Udp.begin(localPort);
+
   Serial.begin(9600);
     while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
+  }
+}
+
+void loop() {
+  if (Serial.available()){
+    SerialParser();
   }
 }
 
@@ -66,13 +75,5 @@ void SerialParser() {
         Serial.println('s');
       }
     }
-  }
-}
-
-
-
-void loop() {
-  if (Serial.available()){
-    SerialParser();
   }
 }
