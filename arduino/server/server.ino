@@ -12,8 +12,14 @@ Servo servos[8];
 int servo_pins[] = {0, 0, 0, 0, 0, 0, 0, 0};
 boolean connected = false;
 
-int Str2int (String Str_value)
-{
+void setup()  {
+  Serial.begin(9600);
+    while (!Serial) {
+    ; // wait for serial port to connect. Needed for Leonardo only
+  }
+}
+
+int Str2int (String Str_value){
   char buffer[10]; //max length is three units
   Str_value.toCharArray(buffer, 10);
   int int_value = atoi(buffer);
@@ -63,14 +69,7 @@ void SerialParser() {
   }
 }
 
-void setup()  {
-  Wire.begin();
-  Wire.setClock(500);
-  Serial.begin(9600);
-    while (!Serial) {
-    ; // wait for serial port to connect. Needed for Leonardo only
-  }
-}
+
 
 void loop() {
   if (Serial.available()){

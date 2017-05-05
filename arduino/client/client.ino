@@ -13,10 +13,9 @@ char responseBuf[5] = {'!', '!', '!', '!', '!'};
 int thrusterVals[2] = {1500, 1500};
 
 void setup() {
-  Wire.begin(8);                // join i2c bus with address #8
-  Wire.setClock(500);
-  Wire.onReceive(receiveEvent); // register event
-  Wire.onRequest(requestEvent);
+  Ethernet.begin(mac, ip);
+  Udp.begin(localPort);
+  
   Serial.begin(9600);           // start serial for output
 }
 
