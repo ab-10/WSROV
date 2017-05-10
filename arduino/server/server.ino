@@ -8,6 +8,7 @@ byte mac[] = {0x90, 0xA2, 0xDA, 0x0D, 0xD2, 0x92};
 IPAddress ip(192, 168, 1, 178);
 IPAddress remoteIP(192, 168, 1, 177);
 unsigned int localPort = 34;
+EthernetUDP Udp;
 
 SoftwareSerial *sserial = NULL;
 Servo servos[8];
@@ -16,7 +17,7 @@ boolean connected = false;
 
 void setup()  {
   Ethernet.begin(mac, ip);
-  EthernetUdp.begin(localPort);
+  Udp.begin(localPort);
 
   Serial.begin(9600);
     while (!Serial) {
@@ -67,14 +68,14 @@ void SerialParser() {
     if (readChar[1] == 'm'){
       Serial.println('m');
     } else if (readChar[1] == 's'){
-      EthernetUdp.beginPacket(remoteIP, 34);
-      EthernetUdp.write(readChar);
-      EthernetUdp.endPacket();
+      Udp.beginPacket(remoteIP, 34);
+      Udp.write(readChar);
+      Udp.endPacket();
       unsigned long time = millis();
-      while((EthernetUdp.parsePacket() < 1) || (millis()-time < 1000)){
+      while((Udp.parsePacket() < 1) || (millis()-time < 1000)){
         ;
       }
-      EthernetUdp.read(readChar, 10);
+      Udp.read(readChar, 10);
       if (readChar[0] == 's'){
         Serial.println('s');
       }

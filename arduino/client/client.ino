@@ -7,6 +7,7 @@ byte mac[] = {0x90, 0xA2, 0xDA, 0x0F, 0x16, 0x2F};
 IPAddress ip(192, 168, 1, 177);
 IPAddress remoteIP(192, 168, 1, 178);
 unsigned int localPort = 34;
+EthernetUDP Udp;
 
 String response;
 char responseBuf[5] = {'!', '!', '!', '!', '!'};
@@ -14,13 +15,13 @@ int thrusterVals[2] = {1500, 1500};
 
 void setup() {
   Ethernet.begin(mac, ip);
-  EthernetUdp.begin(localPort);
+  Udp.begin(localPort);
 
   Serial.begin(9600);
 }
 
 void loop() {
-  int packetSize = EthernetUdp.parsePacket();
+  int packetSize = Udp.parsePacket();
   if (packetSize > 0){
     receiveEvent(packetSize);
   }
@@ -28,7 +29,7 @@ void loop() {
 
 void receiveEvent(int howMany) {
   char readChar[howMany];
-  EthernetUdp.read(readChar, howMany);
+  Udp.read(readChar, howMany);
 
   if (readChar[0] == 'T'){
     int value = readChar[1]*100;
@@ -39,9 +40,9 @@ void receiveEvent(int howMany) {
     thrusterVals[1] = value;
 
   }else if ((readChar[0] == 'A') && (readChar[1] == 's')){
-    EthernetUdp.beginPacket(remoteIP, 34);
-    EthernetUdp.write("s!!!!");
-    EthernetUdp.endPacket();
+    Udp.beginPacket(remoteIP, 34);
+    Udp.write("s!!!!");
+    Udp.endPacket();
   }
 }
 
