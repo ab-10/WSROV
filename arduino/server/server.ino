@@ -1,12 +1,34 @@
-#include <Wire.h>
+#include <SoftwareSerial.h>
+#include <Servo.h>
+#include <SPI.h>
+#include <Ethernet.h>
+#include <EthernetUdp.h>
+
+byte mac[] = {0x90, 0xA2, 0xDA, 0x0D, 0xD2, 0x92};
+IPAddress ip(192, 168, 1, 178);
+IPAddress remoteIP(192, 168, 1, 177);
+unsigned int localPort = 34;
+EthernetUDP Udp;
 
 SoftwareSerial *sserial = NULL;
 Servo servos[8];
 int servo_pins[] = {0, 0, 0, 0, 0, 0, 0, 0};
 boolean connected = false;
 
-int Str2int (String Str_value)
-{
+void setup()  {
+  Ethernet.begin(mac, ip);
+  Udp.begin(localPort);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (Serial.available()){
+    SerialParser();
+  }
+}
+
+int Str2int (String Str_value){
   char buffer[10]; //max length is three units
   Str_value.toCharArray(buffer, 10);
   int int_value = atoi(buffer);
@@ -42,31 +64,18 @@ void SerialParser() {
     // Respond to the ping
     if (readChar[1] == 'm'){
       Serial.println('m');
-    } else if (readChar[1] == 's'){
-      Wire.beginTransmission(8);
-      Wire.write(readChar);
-      Wire.endTransmission();
-      Wire.requestFrom(8, 5);
-      char readChar[5];
-      Wire.readBytes(readChar, 5);
+    } else if(readChar[1] == 's'){
+      Udp.beginPacket(remoteIP, localPort);
+      Udp.write(readChar);
+      Udp.endPacket();
+      unsigned long time = millis();
+      while((Udp.parsePacket() < 1) && (millis()-time < 1000)){
+        ;
+      }
+      Udp.read(readChar, 10);
       if (readChar[0] == 's'){
         Serial.println('s');
       }
     }
-  }
-}
-
-void setup()  {
-  Wire.begin();
-  Wire.setClock(500);
-  Serial.begin(9600);
-    while (!Serial) {
-    ; // wait for serial port to connect. Needed for Leonardo only
-  }
-}
-
-void loop() {
-  if (Serial.available()){
-    SerialParser();
   }
 }
