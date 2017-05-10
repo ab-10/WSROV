@@ -64,12 +64,12 @@ void SerialParser() {
     // Respond to the ping
     if (readChar[1] == 'm'){
       Serial.println('m');
-    } else if (readChar[1] == 's'){
-      Udp.beginPacket(remoteIP, 34);
+    } else if(readChar[1] == 's'){
+      Udp.beginPacket(remoteIP, localPort);
       Udp.write(readChar);
       Udp.endPacket();
       unsigned long time = millis();
-      while((Udp.parsePacket() < 1) || (millis()-time < 1000)){
+      while((Udp.parsePacket() < 1) && (millis()-time < 1000)){
         ;
       }
       Udp.read(readChar, 10);
