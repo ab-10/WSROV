@@ -1,3 +1,5 @@
+#include <SoftwareSerial.h>
+#include <Servo.h>
 #include <SPI.h>
 #include <Ethernet.h>
 #include <EthernetUdp.h>
@@ -14,7 +16,7 @@ boolean connected = false;
 
 void setup()  {
   Ethernet.begin(mac, ip);
-  Udp.begin(localPort);
+  EthernetUdp.begin(localPort);
 
   Serial.begin(9600);
     while (!Serial) {
@@ -65,12 +67,14 @@ void SerialParser() {
     if (readChar[1] == 'm'){
       Serial.println('m');
     } else if (readChar[1] == 's'){
-      Wire.beginTransmission(8);
-      Wire.write(readChar);
-      Wire.endTransmission();
-      Wire.requestFrom(8, 5);
-      char readChar[5];
-      Wire.readBytes(readChar, 5);
+      EthernetUdp.beginPacket(remoteIP, 34);
+      EthernetUdp.write(readChar);
+      EthernetUdp.endPacket();
+      unsigned long time = millis();
+      while((EthernetUdp.parsePacket() < 1) || (millis()-time < 1000)){
+        ;
+      }
+      EthernetUdp.read(readChar, 10);
       if (readChar[0] == 's'){
         Serial.println('s');
       }

@@ -14,19 +14,22 @@ int thrusterVals[2] = {1500, 1500};
 
 void setup() {
   Ethernet.begin(mac, ip);
-  Udp.begin(localPort);
-  
-  Serial.begin(9600);           // start serial for output
+  EthernetUdp.begin(localPort);
+
+  Serial.begin(9600);
 }
 
 void loop() {
+  int packetSize = EthernetUdp.parsePacket();
+  if (packetSize > 0){
+    receiveEvent(packetSize);
+  }
 }
 
-// function that executes whenever data is received from master
-// this function is registered as an event, see setup()
 void receiveEvent(int howMany) {
   char readChar[howMany];
-  Wire.readBytes(readChar, howMany);
+  EthernetUdp.read(readChar, howMany);
+
   if (readChar[0] == 'T'){
     int value = readChar[1]*100;
     value += readChar[2];
@@ -36,7 +39,9 @@ void receiveEvent(int howMany) {
     thrusterVals[1] = value;
 
   }else if ((readChar[0] == 'A') && (readChar[1] == 's')){
-    responseBuf[0] = 's';
+    EthernetUdp.beginPacket(remoteIP, 34);
+    EthernetUdp.write("s!!!!");
+    EthernetUdp.endPacket();
   }
 }
 
