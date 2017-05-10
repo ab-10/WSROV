@@ -45,8 +45,3 @@ void receiveEvent(int howMany) {
     Udp.endPacket();
   }
 }
-
-void requestEvent(){
-  Serial.println(responseBuf);
-  Wire.write(responseBuf);
-}
