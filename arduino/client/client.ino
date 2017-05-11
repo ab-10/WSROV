@@ -1,3 +1,4 @@
+#include <DHT.h>
 #include <SPI.h>
 #include <Ethernet.h>
 #include <EthernetUdp.h>
@@ -9,6 +10,11 @@ IPAddress remoteIP(192, 168, 1, 178);
 unsigned int localPort = 34;
 EthernetUDP Udp;
 
+// Declare parameters and objects for communication with DHT sensor
+#define DHTPIN 2
+#define DHTTYPE DHT22
+DHT dht(DHTPIN, DHTTYPE);
+
 String response;
 char responseBuf[5] = {'!', '!', '!', '!', '!'};
 int thrusterVals[2] = {1500, 1500};
@@ -16,7 +22,7 @@ int thrusterVals[2] = {1500, 1500};
 void setup() {
   Ethernet.begin(mac, ip);
   Udp.begin(localPort);
-
+  dht.begin();
   Serial.begin(9600);
 }
 
