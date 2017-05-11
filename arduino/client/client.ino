@@ -45,6 +45,18 @@ void receiveEvent(int howMany) {
     value += readChar[4];
     thrusterVals[1] = value;
 
+  }else if (readChar[0] == 'S'){
+    float reading;
+    if (readChar[1] == 't'){
+      reading = dht.readTemperature();
+
+    }else if(readChar[1] == 'h'){
+      reading = dht.readHumidity();
+    }
+    Udp.beginPacket(remoteIP, localPort);
+    Udp.write(reading);
+    Udp.endPacket();
+
   }else if ((readChar[0] == 'A') && (readChar[1] == 's')){
     Udp.beginPacket(remoteIP, 34);
     Udp.write("s!!!!");
