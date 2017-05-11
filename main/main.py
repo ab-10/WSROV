@@ -16,7 +16,7 @@ port = ""     # port object used in init()
 controller = controller.controller()
 thruster = thrusterControl.thruster()
 
-def init(port_val = "/dev/ttyACM0",
+def init(port_val = "/dev/ttyACM1",
         timeout=1
          ):
     global port
@@ -80,7 +80,8 @@ def main():
             if event.type == pygame.JOYAXISMOTION:
                 controller.ltrig_val = round((xbox.get_axis(controller.ltrig) + 1) / 0.02, 0)
                 controller.rtrig_val = round((xbox.get_axis(controller.rtrig) + 1) / 0.02, 0)
-
+    print("Trigger press has been recorded.")
+    
     while True:
 
         for event in pygame.event.get():
