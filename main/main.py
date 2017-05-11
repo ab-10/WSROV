@@ -131,3 +131,4 @@ def main():
 
 init()
 test()
+main()
