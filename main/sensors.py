@@ -12,7 +12,7 @@ def get_temp(port):
 
     communication.send(port, 'S', 't')
 
-    temp = port.read(2)
+    temp = communication.read(port)
     return temp
 
 def get_hum(port):
@@ -27,5 +27,5 @@ def get_hum(port):
 
     communication.send(port, 'S', 'h')
 
-    hum = port.read(2)
+    hum = communication.read(port)
     return hum
