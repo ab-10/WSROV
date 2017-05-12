@@ -1,3 +1,5 @@
+import time
+
 """ sends data to Master using simple com protocol
 """
 def send(port, type, byte1='!', byte2='!', byte3='!', byte4='!'):
@@ -8,7 +10,8 @@ def send(port, type, byte1='!', byte2='!', byte3='!', byte4='!'):
 """ reads from Master
 """
 def read(port):
+    time = time.time()
     reading = b""
-    while reading == b"":
+    while (reading == b"") and (time() - time < 2):
         reading = port.readline().replace(b"\r\n", b"")
     return reading
