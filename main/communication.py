@@ -10,8 +10,8 @@ def send(port, type, byte1='!', byte2='!', byte3='!', byte4='!'):
 """ reads from Master
 """
 def read(port):
-    time = time.time()
+    startTime = time.time()
     reading = b""
-    while (reading == b"") and (time() - time < 2):
+    while (reading == b"") and (time.time() - startTime < 2):
         reading = port.readline().replace(b"\r\n", b"")
     return reading
