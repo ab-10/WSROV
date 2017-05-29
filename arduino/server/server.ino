@@ -47,7 +47,7 @@ void split(String results[], int len, String input, char spChar) {
 void SerialParser() {
   char readChar[10];
   String read_;
-  Serial.readBytesUntil('E',readChar,64);
+  Serial.readBytesUntil('E',readChar, 10);
   read_ = String(readChar);
   char header = readChar[0];
   if (header == 'T'){
