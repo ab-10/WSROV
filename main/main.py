@@ -31,8 +31,11 @@ def init(port_val = "/dev/ttyACM1",
         pass
 
 
-# Tests whether is it able to communicate to Xbox controller and both Arduinos
 def test():
+    """ Tests communication with Xbox controller and both Arduinos
+    Return: true or false, based on whether the test was successful
+    """
+
     # Testing connection to the controller
     if(pygame.joystick.get_count() == 0):
         print("No controller found")
@@ -48,6 +51,7 @@ def test():
                     n = False
 
     # Verifying conection to the Master Arduino
+    print("Verifying connection to Master")
     communication.send(port, 'A', 'm')
     read = communication.read(port)
     print(read)
@@ -55,7 +59,7 @@ def test():
         print("Conection to Master verified")
     else:
         print("Failed to verify connection to Master")
-        return
+        return False
 
     # Verifying connection to Slave Arduino
     communication.send(port, 'A', 's')
@@ -65,7 +69,9 @@ def test():
         print('Connection to Slave verified')
     else:
         print('Failed to verify connection to Slave')
-        return
+        return False
+
+    return True
 
 # Code that continiously is being looped through
 def main():
@@ -81,23 +87,19 @@ def main():
                 controller.ltrig_val = round((xbox.get_axis(controller.ltrig) + 1) / 0.02, 0)
                 controller.rtrig_val = round((xbox.get_axis(controller.rtrig) + 1) / 0.02, 0)
     print("Trigger press has been recorded.")
-    
+
     while True:
 
         for event in pygame.event.get():
             # Uppon a button press updates values (states) of all buttons
             # Comment out buttons not used
             if event.type == pygame.JOYBUTTONUP:
-                controller.a_butVal = xbox.get_button(controller.a_but)
-                controller.b_butVal = xbox.get_button(controller.b_but)
-                controller.x_butVal = xbox.get_button(controller.x_but)
-                controller.y_butVal = xbox.get_button(controller.y_but)
-                controller.l_butVal = xbox.get_button(controller.l_but)
-                controller.r_butVal = xbox.get_button(controller.r_but)
-                controller.back_butVal = xbox.get_button(controller.back_but)
-                controller.start_butVal = xbox.get_button(controller.start_but)
-                controller.ls_butVal = xbox.get_button(controller.ls_but)
-                controller.rs_butVal = xbox.get_button(controller.rs_but)
+                if event.button == controller.a_but:
+                    print("Humidity requested")
+                    print("Humidity: ", sensors.get_hum(port))
+                elif event.button == controller.b_but:
+                    print("Temperature requested")
+                    print("Temperature: ", sensors.get_temp(port))
 
             # Uppon joystick movement updates values for all joysticks
             if event.type == pygame.JOYAXISMOTION:
@@ -122,12 +124,6 @@ def main():
 
         # sends force values of each thruster to Master
         thruster.send(port)
-
-        if controller.a_butVal == 1:
-            print("Humidity:", sensors.get_hum(port))
-
-        if controller.b_butVal == 1:
-            print("Temperature:", sensors.get_temp(port))
 
 
 init()
