@@ -39,7 +39,7 @@ def test():
     # Testing connection to the controller
     if(pygame.joystick.get_count() == 0):
         print("No controller found")
-        return
+        return False
     print("Press the 'start' button!")
 
     n = True
