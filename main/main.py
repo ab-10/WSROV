@@ -118,10 +118,6 @@ def main():
 
         thruster.updateForce(controller.rsy_val, controller.lsy_val)
 
-        # If horizontal direction has changed
-        # sends zeros to all corner thrusters first
-        thruster.sendNull(port)
-
         # sends force values of each thruster to Master
         thruster.send(port)
 
