@@ -52,8 +52,10 @@ void SerialParser() {
   char header = readChar[0];
   if (header == 'T'){
     // Change thruster values
+    // T is being printed for debugging purposes
     Serial.println('T');
   } else if (header == 'S'){
+    // 10 is being printed for debugging purposes
     Serial.println("10");
     /*
     // Request sensor values from Slave and send them to Main
