@@ -44,10 +44,6 @@ void split(String results[], int len, String input, char spChar) {
   }
 }
 
-void Version(){
-  Serial.println("version");
-}
-
 void SerialParser() {
   char readChar[10];
   String read_;
@@ -58,8 +54,19 @@ void SerialParser() {
     // Change thruster values
     Serial.println('T');
   } else if (header == 'S'){
+    Serial.println("10");
+    /*
     // Request sensor values from Slave and send them to Main
-    Serial.println('S');
+    Udp.beginPacket(remoteIP, localPort);
+    Udp.write(readChar);
+    Udp.endPacket();
+    unsigned long time = millis();
+    while((Udp.parsePacket() < 1) && (millis()-time < 1000)){
+      ;
+    }
+    Udp.read(readChar, 10);
+    Serial.println(readChar);
+    */
   } else if (header == 'A'){
     // Respond to the ping
     if (readChar[1] == 'm'){
