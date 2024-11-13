@@ -19,8 +19,10 @@ thruster = thrusterControl.thruster()
 def init(port_val = "/dev/ttyACM1",
         timeout=1
          ):
+    global port
     port = serial.Serial(port_val, timeout=timeout)
     pygame.joystick.init()
+    global xbox
     xbox = pygame.joystick.Joystick(0)
     xbox.init()
     screen = pygame.display.set_mode((320, 160))
